@@ -57,7 +57,8 @@
 @property (assign, nonatomic) int zombiePlayFilter;
 
 // Zombie images and gesture based state changes
-@property (strong, nonatomic) UIImageView *zombieImageBackground;
+@property (strong, nonatomic) UIImageView *greenImageBackground;
+@property (strong, nonatomic) UIImageView *redImageBackground;
 @property (strong, nonatomic) UIColor *zombieBgColor;
 @property (strong, nonatomic) UISwipeGestureRecognizer *rightRecognizer;
 @property (strong, nonatomic) UISwipeGestureRecognizer *leftRecognizer;
@@ -173,15 +174,21 @@ static const float kLightestZombieAlpha = 0.05f;
                          zombieSoundMoan3Url, zombieSoundAttackedUrl, nil];
     
     // Set up the zombie background picture
-    UIImage* zombiePattern = [UIImage imageNamed:@"green_light.jpg"];
+    UIImage* greenPattern = [UIImage imageNamed:@"green_light.jpg"];
+    UIImage* redPattern = [UIImage imageNamed:@"red_light.png"];
     self.zombieBgColor = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.3];
-    self.zombieImageBackground = [[UIImageView alloc] initWithImage:zombiePattern];
-    self.zombieImageBackground.frame = self.view.bounds;
+    self.greenImageBackground = [[UIImageView alloc] initWithImage:greenPattern];
+    self.redImageBackground = [[UIImageView alloc] initWithImage:redPattern];
+    self.greenImageBackground.frame = CGRectMake(0, 0, 160, 720);
+    self.redImageBackground.frame = CGRectMake(160, 0, 160, 720);
     // Initialize the opacity as essentially transparent
-    self.zombieImageBackground.alpha = kLightestZombieAlpha;
+    self.greenImageBackground.alpha = kLightestZombieAlpha;
+    self.redImageBackground.alpha = kLightestZombieAlpha;
     
-    [self.view addSubview:self.zombieImageBackground];
-    [self.view sendSubviewToBack:self.zombieImageBackground];
+    [self.view addSubview:self.greenImageBackground];
+    [self.view sendSubviewToBack:self.greenImageBackground];
+    [self.view addSubview:self.redImageBackground];
+    [self.view sendSubviewToBack:self.redImageBackground];
     
     // set up gestures to turn on zombification.  Right for zombies, left for healthies
     self.rightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
@@ -209,16 +216,22 @@ static const float kLightestZombieAlpha = 0.05f;
     if ( deliciousBrains )
     {
         // Create a zombeacon
-        self.zombieImageBackground.alpha = 1.0f;
-        self.zombieImageBackground.backgroundColor = self.zombieBgColor;
+        //self.greenImageBackground.alpha = 1.0f;
+        //self.redImageBackground.alpha = 1.0f;
+
+        self.greenImageBackground.backgroundColor = self.zombieBgColor;
+        self.redImageBackground.backgroundColor = self.zombieBgColor;
         self.isZombeacon = true;
         [self startBeaconingInfected];
     }
     else
     {
         // Switch back to a healthy lifestyle
-        self.zombieImageBackground.alpha = kLightestZombieAlpha;
-        self.zombieImageBackground.backgroundColor = [UIColor clearColor];
+        self.greenImageBackground.alpha = kLightestZombieAlpha;
+        self.greenImageBackground.backgroundColor = [UIColor clearColor];
+        self.redImageBackground.alpha = kLightestZombieAlpha;
+        self.redImageBackground.backgroundColor = [UIColor clearColor];
+
         self.isZombeacon = false;
         [self startBeaconingUninfected];
     }
@@ -349,22 +362,47 @@ static const float kLightestZombieAlpha = 0.05f;
                 // Become a zombeacon!
                 [self playBite];
                 [self brainsAreTasty:YES];
+                if ([region.identifier isEqualToString:@"Fencer 1"])
+                {
+                    self.greenImageBackground.alpha = 1.0f;
+                }
+                if ([region.identifier isEqualToString:@"Fencer 2"])
+                {
+                    self.redImageBackground.alpha = 1.0f;
+                }
             }
             else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
             {
                 // Become a zombeacon!
                 [self playBite];
                 [self brainsAreTasty:YES];
+                if ([region.identifier isEqualToString:@"Fencer 1"])
+                {
+                    self.greenImageBackground.alpha = 1.0f;
+                }
+                if ([region.identifier isEqualToString:@"Fencer 2"])
+                {
+                    self.redImageBackground.alpha = 1.0f;
+                }
             }
             else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
             {
                 // Become a zombeaco
                 [self playBite];
                 [self brainsAreTasty:YES];
+                if ([region.identifier isEqualToString:@"Fencer 1"])
+                {
+                    self.greenImageBackground.alpha = 1.0f;
+                }
+                if ([region.identifier isEqualToString:@"Fencer 2"])
+                {
+                    self.redImageBackground.alpha = 1.0f;
+                }
             }
             
         }
         NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
+        
     }
 }
 
