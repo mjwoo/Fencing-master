@@ -39,8 +39,6 @@
 @property (strong, nonatomic) CLLocationManager *locManager;
 @property (strong, nonatomic) CLBeaconRegion *beaconRegion;
 @property (strong, nonatomic) CLBeaconRegion *zomBeaconRegion;
-//@property (strong, nonatomic) CLBeaconRegion *beaconRegion2;
-//@property (strong, nonatomic) CLBeaconRegion *zomBeaconRegion2;
 @property (assign, nonatomic) CLProximity lastProximity;
 @property (assign, nonatomic) int proxFilter;
 
@@ -48,8 +46,6 @@
 @property (strong, nonatomic) CBPeripheralManager *beaconManager;
 @property (strong, nonatomic) NSMutableDictionary *beaconAdvData;
 @property (strong, nonatomic) NSMutableDictionary *zomBeaconAdvData;
-//@property (strong, nonatomic) NSMutableDictionary *beaconAdvData2;
-//@property (strong, nonatomic) NSMutableDictionary *zomBeaconAdvData2;
 
 // AVFoundation Framework
 @property (strong, nonatomic) NSArray *zombieSounds;
@@ -75,11 +71,7 @@ static const int kMajorUninfected = 0;
 static const int kMajorZombie = 1;
 //NSString *const kBeaconUuid = @"95C8A575-0354-4ADE-8C6C-33E72CD84E9F";
 NSString *const kBeaconUuid = @"A495FF10-C5B1-4B44-B512-1370F02D74DE";
-NSString *const kBeaconIdentifier = @"Fencer 1";
-
-// Second Blue Bean
-//NSString *const kBeaconUuid2= @"A4951234-C5B1-4B44-B512-1370F02D74DE";
-//NSString *const kBeaconIdentifier2 = @"Fencer 2";
+NSString *const kBeaconIdentifier = @"com.punchthrough.zombeacon";
 
 // Filters and view opacity
 static const int kProxFilterCount = 1;
@@ -107,9 +99,6 @@ static const float kLightestZombieAlpha = 0.05f;
 
     // This UUID is the unique identifier for all Zombeacons and Beacons that monitor for Zombeacons.
     NSUUID *proximityUUID = [[NSUUID alloc] initWithUUIDString:kBeaconUuid];
-    
-    //NSUUID *proximityUUID2 = [[NSUUID alloc] initWithUUIDString:kBeaconUuid2];
-
 
     // Be sure to register the view controller as the location manager delegate to obtain callbacks
     // for beacon monitoring
@@ -137,14 +126,6 @@ static const float kLightestZombieAlpha = 0.05f;
     self.zomBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
                                                               major:kMajorZombie
                                                          identifier:kBeaconIdentifier];
-    
-    //self.beaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
-      //                                                          major:kMajorUninfected
-        //                                                   identifier:kBeaconIdentifier2];
-    
-    //self.zomBeaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
-          //                                                         major:kMajorZombie
-            //                                                  identifier:kBeaconIdentifier2];
 
     // Advertising NSDictionary objects created from the regions we defined
     // We add a local name for each, but it isn't a necessary step
@@ -155,14 +136,6 @@ static const float kLightestZombieAlpha = 0.05f;
     self.zomBeaconAdvData = [self.zomBeaconRegion peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
     [self.zomBeaconAdvData setObject:@"Zombeacon"
                               forKey:CBAdvertisementDataLocalNameKey];
-
-    //self.beaconAdvData2 = [self.beaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
-    //[self.beaconAdvData2  setObject:@"Healthy Beacon"
-      //                      forKey:CBAdvertisementDataLocalNameKey];
-    
-    //self.zomBeaconAdvData2 = [self.zomBeaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
-    //[self.zomBeaconAdvData2 setObject:@"Zombeacon"
-      //                        forKey:CBAdvertisementDataLocalNameKey];
 
 
     // Set up audio files for playback
@@ -176,10 +149,8 @@ static const float kLightestZombieAlpha = 0.05f;
 
     // Set up the zombie background picture
     UIImage* zombiePattern = [UIImage imageNamed:@"green_light.jpg"];
-    //UIImage* redPattern = [UIImage imageNamed:@"green_light.jpg"];
     self.zombieBgColor = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.3];
     self.zombieImageBackground = [[UIImageView alloc] initWithImage:zombiePattern];
-    //self.redImageBackground = [[UIImageView alloc] initWithImage:redPattern];
     self.zombieImageBackground.frame = self.view.bounds;
     // Initialize the opacity as essentially transparent
     self.zombieImageBackground.alpha = kLightestZombieAlpha;
@@ -242,12 +213,6 @@ static const float kLightestZombieAlpha = 0.05f;
 
     [self.locManager startMonitoringForRegion:self.zomBeaconRegion];
     [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion];
-    
-    //[self.locManager stopMonitoringForRegion:self.beaconRegion2];
-    //[self.locManager stopRangingBeaconsInRegion:self.beaconRegion2];
-    
-    //[self.locManager startMonitoringForRegion:self.zomBeaconRegion2];
-    //[self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion2];
 
     [self.beaconManager startAdvertising:self.beaconAdvData];
 }
@@ -263,13 +228,6 @@ static const float kLightestZombieAlpha = 0.05f;
 
     [self.locManager startMonitoringForRegion:self.beaconRegion];
     [self.locManager startRangingBeaconsInRegion:self.beaconRegion];
-    
-    //[self.locManager stopMonitoringForRegion:self.zomBeaconRegion2];
-    //[self.locManager stopRangingBeaconsInRegion:self.zomBeaconRegion2];
-    
-    
-    //[self.locManager startMonitoringForRegion:self.beaconRegion2];
-    //[self.locManager startRangingBeaconsInRegion:self.beaconRegion2];
 
     [self.beaconManager startAdvertising:self.zomBeaconAdvData];
 }
@@ -322,8 +280,6 @@ static const float kLightestZombieAlpha = 0.05f;
         // This filter will ensure that a single reading of "Near" or "Immediate" doesn't
         // trigger a sound playback or beacon state switch immediately.  These are
         // George A. Romero style Zombeacons.
-        
-        
         if (nearestBeacon.proximity != self.lastProximity)
         {
             self.proxFilter = 0;
@@ -338,7 +294,6 @@ static const float kLightestZombieAlpha = 0.05f;
         {
             // If you are a zombeacon, and you notice a healthy beacon that is at least near to you,
             // groan as your hunger for brains is all consuming
-            
             if ( self.isZombeacon
                 && ( CLProximityNear == nearestBeacon.proximity
                     || CLProximityImmediate == nearestBeacon.proximity ) )
@@ -351,7 +306,6 @@ static const float kLightestZombieAlpha = 0.05f;
                      self.zombiePlayFilter = 0;
                  }
             }
-            
             // The healthy beacon is bit if the zombeacon is at an immediate distance
             else if ( !self.isZombeacon )//&& CLProximityImmediate == nearestBeacon.proximity )
             {
