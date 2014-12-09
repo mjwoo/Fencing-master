@@ -48,6 +48,8 @@
 @property (strong, nonatomic) CBPeripheralManager *beaconManager;
 @property (strong, nonatomic) NSMutableDictionary *beaconAdvData;
 @property (strong, nonatomic) NSMutableDictionary *zomBeaconAdvData;
+@property (strong, nonatomic) NSMutableDictionary *beaconAdvData2;
+@property (strong, nonatomic) NSMutableDictionary *zomBeaconAdvData2;
 
 // AVFoundation Framework
 @property (strong, nonatomic) NSArray *zombieSounds;
@@ -73,7 +75,11 @@ static const int kMajorUninfected = 0;
 static const int kMajorZombie = 1;
 //NSString *const kBeaconUuid = @"95C8A575-0354-4ADE-8C6C-33E72CD84E9F";
 NSString *const kBeaconUuid = @"A495FF10-C5B1-4B44-B512-1370F02D74DE";
-NSString *const kBeaconIdentifier = @"com.punchthrough.zombeacon";
+NSString *const kBeaconIdentifier = @"Fencer 1";
+
+// Second Blue Bean
+NSString *const kBeaconUuid2= @"A4951234-C5B1-4B44-B512-1370F02D74DE";
+NSString *const kBeaconIdentifier2 = @"Fencer 2";
 
 // Filters and view opacity
 static const int kProxFilterCount = 1;
@@ -101,6 +107,7 @@ static const float kLightestZombieAlpha = 0.05f;
     
     // This UUID is the unique identifier for all Zombeacons and Beacons that monitor for Zombeacons.
     NSUUID *proximityUUID = [[NSUUID alloc] initWithUUIDString:kBeaconUuid];
+    NSUUID *proximityUUID2 = [[NSUUID alloc] initWithUUIDString:kBeaconUuid2];
     
     // Be sure to register the view controller as the location manager delegate to obtain callbacks
     // for beacon monitoring
@@ -129,6 +136,14 @@ static const float kLightestZombieAlpha = 0.05f;
                                                                    major:kMajorZombie
                                                               identifier:kBeaconIdentifier];
     
+    self.beaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
+                                                              major:kMajorUninfected
+                                                       identifier:kBeaconIdentifier2];
+    
+    self.zomBeaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
+                                                             major:kMajorZombie
+                                                      identifier:kBeaconIdentifier2];
+    
     // Advertising NSDictionary objects created from the regions we defined
     // We add a local name for each, but it isn't a necessary step
     self.beaconAdvData = [self.beaconRegion peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
@@ -138,6 +153,14 @@ static const float kLightestZombieAlpha = 0.05f;
     self.zomBeaconAdvData = [self.zomBeaconRegion peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
     [self.zomBeaconAdvData setObject:@"Zombeacon"
                               forKey:CBAdvertisementDataLocalNameKey];
+    
+    self.beaconAdvData2 = [self.beaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
+    [self.beaconAdvData2  setObject:@"Healthy Beacon"
+                          forKey:CBAdvertisementDataLocalNameKey];
+    
+    self.zomBeaconAdvData2 = [self.zomBeaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
+    [self.zomBeaconAdvData2 setObject:@"Zombeacon"
+                            forKey:CBAdvertisementDataLocalNameKey];
     
     
     // Set up audio files for playback
@@ -216,6 +239,12 @@ static const float kLightestZombieAlpha = 0.05f;
     [self.locManager startMonitoringForRegion:self.zomBeaconRegion];
     [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion];
     
+    [self.locManager stopMonitoringForRegion:self.beaconRegion2];
+    [self.locManager stopRangingBeaconsInRegion:self.beaconRegion2];
+    
+    [self.locManager startMonitoringForRegion:self.zomBeaconRegion2];
+    [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion2];
+    
     [self.beaconManager startAdvertising:self.beaconAdvData];
 }
 
@@ -230,6 +259,12 @@ static const float kLightestZombieAlpha = 0.05f;
     
     [self.locManager startMonitoringForRegion:self.beaconRegion];
     [self.locManager startRangingBeaconsInRegion:self.beaconRegion];
+    
+    [self.locManager stopMonitoringForRegion:self.beaconRegion2];
+    [self.locManager stopRangingBeaconsInRegion:self.beaconRegion2];
+    
+    [self.locManager startMonitoringForRegion:self.zomBeaconRegion2];
+    [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion2];
     
     [self.beaconManager startAdvertising:self.zomBeaconAdvData];
 }
