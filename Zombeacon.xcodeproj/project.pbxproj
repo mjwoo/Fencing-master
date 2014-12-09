@@ -31,7 +31,7 @@
 		67E05AB218BC3BCC00F0AFD8 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67E05AB118BC3BCC00F0AFD8 /* CoreBluetooth.framework */; };
 		67E05AB418BC3BD200F0AFD8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67E05AB318BC3BD200F0AFD8 /* CoreLocation.framework */; };
 		F1935C291A36B7FB005FAA65 /* green_light.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F1935C281A36B7FB005FAA65 /* green_light.jpg */; };
-		F1935C2D1A36BF85005FAA65 /* red_color.png in Resources */ = {isa = PBXBuildFile; fileRef = F1935C2C1A36BF85005FAA65 /* red_color.png */; };
+		F1935C2D1A36BF85005FAA65 /* red_light.png in Resources */ = {isa = PBXBuildFile; fileRef = F1935C2C1A36BF85005FAA65 /* red_light.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,7 +73,7 @@
 		67E05AB118BC3BCC00F0AFD8 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		67E05AB318BC3BD200F0AFD8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F1935C281A36B7FB005FAA65 /* green_light.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = green_light.jpg; path = Images/green_light.jpg; sourceTree = SOURCE_ROOT; };
-		F1935C2C1A36BF85005FAA65 /* red_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red_color.png; path = Images/red_color.png; sourceTree = SOURCE_ROOT; };
+		F1935C2C1A36BF85005FAA65 /* red_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red_light.png; path = Images/red_light.png; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +106,7 @@
 		67C6B91618BF155600075191 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				F1935C2C1A36BF85005FAA65 /* red_color.png */,
+				F1935C2C1A36BF85005FAA65 /* red_light.png */,
 				F1935C281A36B7FB005FAA65 /* green_light.jpg */,
 				67211DFB18C11E8000262280 /* ZombieAttacked.wav */,
 				67211DFC18C11E8000262280 /* ZombieBite.wav */,
@@ -264,7 +264,7 @@
 				67211E0418C11E8000262280 /* ZombieMoan.wav in Resources */,
 				F1935C291A36B7FB005FAA65 /* green_light.jpg in Resources */,
 				67211DF918C11E7400262280 /* ZombieBackground.png in Resources */,
-				F1935C2D1A36BF85005FAA65 /* red_color.png in Resources */,
+				F1935C2D1A36BF85005FAA65 /* red_light.png in Resources */,
 				673E677E18C1218100F0235E /* Images.xcassets in Resources */,
 				67211DFA18C11E7400262280 /* ZombieTransparent.png in Resources */,
 				670EBA6818C123BE00704B6B /* InfoPlist.strings in Resources */,
