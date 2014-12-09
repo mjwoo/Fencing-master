@@ -16,6 +16,8 @@
 		<string>https://github.com/PunchThrough/Zombeacon.git</string>
 		<key>71968D7C-387F-4D19-AC53-533F4B6BEEBC</key>
 		<string>ec2-50-19-205-244.compute-1.amazonaws.com:~/gitrepo/xcode.git</string>
+		<key>DC19A0437564F440B85F60FD77F9886F781FDD7C</key>
+		<string>https://github.com/mjwoo/Fencing-master.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Zombeacon.xcodeproj</string>
@@ -24,16 +26,18 @@
 		<key>32C65A91-FC2E-4C42-9D9F-94B5AD372D55</key>
 		<string>../../..</string>
 		<key>4B41B48012F688046930219CD826F1394CBB6265</key>
-		<string>../..</string>
+		<string>../../../Zombeacon</string>
 		<key>71968D7C-387F-4D19-AC53-533F4B6BEEBC</key>
 		<string>../../../iOs</string>
+		<key>DC19A0437564F440B85F60FD77F9886F781FDD7C</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/PunchThrough/Zombeacon.git</string>
+	<string>https://github.com/mjwoo/Fencing-master.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>4B41B48012F688046930219CD826F1394CBB6265</string>
+	<string>DC19A0437564F440B85F60FD77F9886F781FDD7C</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -59,6 +63,14 @@
 			<string>4B41B48012F688046930219CD826F1394CBB6265</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Zombeacon</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DC19A0437564F440B85F60FD77F9886F781FDD7C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Zombeacon-master</string>
 		</dict>
 	</array>
 </dict>
