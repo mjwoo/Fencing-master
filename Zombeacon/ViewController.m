@@ -195,30 +195,16 @@ static const float kLightestZombieAlpha = 0.05f;
 }
 
 // Sets device as a beacon or zombeacon
--(void)brainsAreTasty:(bool)deliciousBrains
+-(void)resetScore
 {
-    if ( deliciousBrains )
-    {
-        // Create a zombeacon
-        //self.greenImageBackground.alpha = 1.0f;
-        //self.redImageBackground.alpha = 1.0f;
-        
-        self.greenImageBackground.backgroundColor = self.zombieBgColor;
-        self.redImageBackground.backgroundColor = self.zombieBgColor;
-        self.isZombeacon = true;
-        [self startBeaconingInfected];
-    }
-    else
-    {
-        // Switch back to a healthy lifestyle
-        self.greenImageBackground.alpha = kLightestZombieAlpha;
-        self.greenImageBackground.backgroundColor = [UIColor clearColor];
-        self.redImageBackground.alpha = kLightestZombieAlpha;
-        self.redImageBackground.backgroundColor = [UIColor clearColor];
-        
-        self.isZombeacon = false;
-        [self startBeaconingUninfected];
-    }
+    // Switch back to a healthy lifestyle
+    self.greenImageBackground.alpha = kLightestZombieAlpha;
+    self.greenImageBackground.backgroundColor = [UIColor clearColor];
+    self.redImageBackground.alpha = kLightestZombieAlpha;
+    self.redImageBackground.backgroundColor = [UIColor clearColor];
+    
+    self.isZombeacon = false;
+    [self startBeaconingUninfected];
     
     // reset filter
     self.proxFilter = 0;
@@ -483,7 +469,7 @@ static const float kLightestZombieAlpha = 0.05f;
 // Gesture that sets the state to a healthy beacon
 - (void)leftSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer
 {
-    [self brainsAreTasty:NO];
+    [self resetScore];
 }
 
 // Randomized playback using AVFoundation Framework
