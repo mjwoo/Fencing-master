@@ -230,6 +230,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Punch Through Design";
 				TargetAttributes = {
+					67E05A7818BC3A9700F0AFD8 = {
+						DevelopmentTeam = SLPW2STN7Q;
+					};
 					67E05A9918BC3A9700F0AFD8 = {
 						TestTargetID = 67E05A7818BC3A9700F0AFD8;
 					};

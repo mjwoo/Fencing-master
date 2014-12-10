@@ -210,6 +210,24 @@ static const float kLightestZombieAlpha = 0.05f;
     self.proxFilter = 0;
 }
 
+//Converts mach absolute time into nanoseconds
+-(int)convertTime:(uint64_t)machTime
+{
+    /* Get the timebase info */
+    mach_timebase_info_data_t info;
+    mach_timebase_info(&info);
+    
+    uint64_t start = mach_absolute_time();
+    
+    /* Do some code */
+    
+    uint64_t duration = mach_absolute_time() - start;
+    
+    /* Convert to nanoseconds */
+    duration *= info.numer;
+    duration /= info.denom;
+}
+
 // Starts monitoring for infected beacons and advertises itself as a healthy beacon
 -(void)startBeaconingUninfected
 {
@@ -266,11 +284,9 @@ static const float kLightestZombieAlpha = 0.05f;
 {
     // We're only concerned with the nearest beacon, which is always the first object
     CLBeacon *nearestBeacon = [beacons firstObject];
-    CLBeacon *secondHit = [beacons lastObject];
     
     NSString *minorOneID = [NSString stringWithFormat:@"%@", nearestBeacon.minor];
-    NSString *minorID = [NSString stringWithFormat:@"%@", secondHit.minor];
-    NSLog(@"Minor ID: %@", minorID);
+    NSLog(@"START");
     NSLog(@"Minor ID CLose: %@", minorOneID);
     self.lastProximity = nearestBeacon.proximity;
     
@@ -336,8 +352,14 @@ static const float kLightestZombieAlpha = 0.05f;
                 
                 self.greenImageBackground.alpha = 1.0f;
                 
-                uint64_t start = mach_absolute_time();
-                NSLog(@"Start: %qu", start);
+    
+                
+                /* Log the time */
+                NSLog(@"My amazing code took %lld nanoseconds!", duration);
+                
+                while (mach_absolute_time() - start) {
+                    <#statements#>
+                }
                 
             }
             if ([nearestBeacon.minor isEqualToNumber:@23])
@@ -352,10 +374,6 @@ static const float kLightestZombieAlpha = 0.05f;
                 uint64_t start = mach_absolute_time();
                 NSLog(@"Start: %qu", start);
                 
-                if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
-                {
-                    self.greenImageBackground.alpha = 1.0f;
-                }
             }
         }
         else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
@@ -366,8 +384,22 @@ static const float kLightestZombieAlpha = 0.05f;
             {
                 self.greenImageBackground.alpha = 1.0f;
                 
+                /* Get the timebase info */
+                mach_timebase_info_data_t info;
+                mach_timebase_info(&info);
+                
                 uint64_t start = mach_absolute_time();
-                NSLog(@"Start: %qu", start);
+                
+                /* Do some code */
+                
+                uint64_t duration = mach_absolute_time() - start;
+                
+                /* Convert to nanoseconds */
+                duration *= info.numer;
+                duration /= info.denom;
+                
+                /* Log the time */
+                NSLog(@"My amazing code took %lld nanoseconds!", duration);
                 //NSLog(@"Start time: %f", elapsed);
                 /*
                  if (elapsed < 5)
@@ -388,10 +420,6 @@ static const float kLightestZombieAlpha = 0.05f;
                 uint64_t start = mach_absolute_time();
                 NSLog(@"Start: %qu", start);
                 
-                if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
-                {
-                    self.greenImageBackground.alpha = 1.0f;
-                }
             }
         }
         else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
@@ -400,15 +428,24 @@ static const float kLightestZombieAlpha = 0.05f;
             //[self brainsAreTasty:YES];
             if ([nearestBeacon.minor isEqualToNumber:@250])
             {
-                CFTimeInterval startTime = CACurrentMediaTime();
                 self.greenImageBackground.alpha = 1.0f;
                 
-                CFTimeInterval now = CACurrentMediaTime();
-                CFTimeInterval elapsed = now - startTime;
+                /* Get the timebase info */
+                mach_timebase_info_data_t info;
+                mach_timebase_info(&info);
                 
                 uint64_t start = mach_absolute_time();
                 
-                NSLog(@"Start: %qu", start);
+                /* Do some code */
+                
+                uint64_t duration = mach_absolute_time() - start;
+                
+                /* Convert to nanoseconds */
+                duration *= info.numer;
+                duration /= info.denom;
+                
+                /* Log the time */
+                NSLog(@"My amazing code took %lld nanoseconds!", duration);
                 
                 /*
                  if (elapsed < 5)
@@ -420,20 +457,10 @@ static const float kLightestZombieAlpha = 0.05f;
             }
             if ([nearestBeacon.minor isEqualToNumber:@23])
             {
-                CFTimeInterval startTime = CACurrentMediaTime();
                 self.redImageBackground.alpha = 1.0f;
-                
-                CFTimeInterval now = CACurrentMediaTime();
-                CFTimeInterval elapsed = now - startTime;
-                //NSLog(@"Start time: %f", elapsed);
                 
                 uint64_t start = mach_absolute_time();
                 NSLog(@"Start: %qu", start);
-                
-                if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
-                {
-                    self.greenImageBackground.alpha = 1.0f;
-                }
             }
         }
         
