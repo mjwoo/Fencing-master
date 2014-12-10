@@ -372,6 +372,7 @@ static const float kLightestZombieAlpha = 0.05f;
             else if ( !self.isZombeacon && CLProximityFar == nearestBeacon.proximity )
             {
                 // Become a zombeacon!
+                [self playBite];
                 [self brainsAreTasty:YES];
                 if ([region.identifier isEqualToString:@"Fencer 1"])
                 {
@@ -406,6 +407,7 @@ static const float kLightestZombieAlpha = 0.05f;
             else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
             {
                 // Become a zombeacon!
+                [self playBite];
                 [self brainsAreTasty:YES];
                 if ([region.identifier isEqualToString:@"Fencer 1"])
                 {
@@ -440,6 +442,7 @@ static const float kLightestZombieAlpha = 0.05f;
             else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
             {
                 // Become a zombeaco
+                [self playBite];
                 [self brainsAreTasty:YES];
                 if ([region.identifier isEqualToString:@"Fencer 1"])
                 {
@@ -513,6 +516,18 @@ static const float kLightestZombieAlpha = 0.05f;
     
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:self.zombieSounds[randSoundIdx]
                                                               error:&error];
+    [self.audioPlayer prepareToPlay];
+    [self.audioPlayer play];
+}
+
+// Always play the same sound for a bite
+-(void)playBite
+{
+    NSURL *zombieSoundBiteUrl = [[NSBundle mainBundle] URLForResource:@"ZombieBite2"
+                                                        withExtension:@"mp3"];
+    
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:zombieSoundBiteUrl
+                                                              error:nil];
     [self.audioPlayer prepareToPlay];
     [self.audioPlayer play];
 }
