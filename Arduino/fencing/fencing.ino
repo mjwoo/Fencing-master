@@ -18,10 +18,10 @@ void loop() {
 
   if (sensorValue == 0.00)
   {
-    /Serial.write("Touch Scored!\n");
+    //Serial.write("Touch Scored!\n");
     // Enable the advertising packets
     Bean.enableAdvertising( true, 1000 );
-    //Bean.sleep(1000);
+    Bean.sleep(1000);
   }
   else
   {
@@ -36,5 +36,5 @@ void loop() {
   else{
     Bean.setLed(0,0,0);
   }
-  Bean.sleep(100);
+  // Bean.sleep(100);
 }
