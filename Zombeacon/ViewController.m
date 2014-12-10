@@ -211,21 +211,20 @@ static const float kLightestZombieAlpha = 0.05f;
 }
 
 //Converts mach absolute time into nanoseconds
--(int)convertTime:(uint64_t)machTime
+-(int)timeDifference:(uint64_t)machTime
 {
     /* Get the timebase info */
     mach_timebase_info_data_t info;
     mach_timebase_info(&info);
     
-    uint64_t start = mach_absolute_time();
-    
-    /* Do some code */
-    
-    uint64_t duration = mach_absolute_time() - start;
+    uint64_t duration = mach_absolute_time() - machTime;
     
     /* Convert to nanoseconds */
     duration *= info.numer;
     duration /= info.denom;
+
+    // Return the converted time difference
+    return duration;
 }
 
 // Starts monitoring for infected beacons and advertises itself as a healthy beacon
@@ -352,12 +351,9 @@ static const float kLightestZombieAlpha = 0.05f;
                 
                 self.greenImageBackground.alpha = 1.0f;
                 
-    
+                uint64_t start = mach_absolute_time();
                 
-                /* Log the time */
-                NSLog(@"My amazing code took %lld nanoseconds!", duration);
-                
-                while (mach_absolute_time() - start) {
+                while (convertTime(start)) {
                     <#statements#>
                 }
                 
@@ -384,30 +380,8 @@ static const float kLightestZombieAlpha = 0.05f;
             {
                 self.greenImageBackground.alpha = 1.0f;
                 
-                /* Get the timebase info */
-                mach_timebase_info_data_t info;
-                mach_timebase_info(&info);
-                
                 uint64_t start = mach_absolute_time();
-                
-                /* Do some code */
-                
-                uint64_t duration = mach_absolute_time() - start;
-                
-                /* Convert to nanoseconds */
-                duration *= info.numer;
-                duration /= info.denom;
-                
-                /* Log the time */
-                NSLog(@"My amazing code took %lld nanoseconds!", duration);
-                //NSLog(@"Start time: %f", elapsed);
-                /*
-                 if (elapsed < 5)
-                 {
-                 NSLog(@"Hello World");
-                 self.redImageBackground.alpha = 1.0f;
-                 }
-                 */
+
             }
             if ([nearestBeacon.minor isEqualToNumber:@23])
             {
