@@ -32,6 +32,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 #import <CoreLocation/CoreLocation.h>
+#import <mach/mach_time.h> //for mach_absolute_time
 
 @interface ViewController () <CBPeripheralManagerDelegate, CLLocationManagerDelegate>
 
@@ -133,23 +134,23 @@ static const float kLightestZombieAlpha = 0.05f;
     // have used minor IDs in place of major IDs as well.
     self.beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
                                                                 major:kMajorUninfected
-                                                                //minor:kMinorFencerA
+                         //minor:kMinorFencerA
                                                            identifier:kBeaconIdentifier];
     
     self.zomBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
                                                                    major:kMajorZombie
-                                                                   //minor:kMinorFencerA
+                            //minor:kMinorFencerA
                                                               identifier:kBeaconIdentifier];
     
     self.beaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
-                                                              major:kMajorUninfected
-                                                              //minor:kMinorFencerB
-                                                       identifier:kBeaconIdentifier2];
+                                                                 major:kMajorUninfected
+                          //minor:kMinorFencerB
+                                                            identifier:kBeaconIdentifier2];
     
     self.zomBeaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
-                                                             major:kMajorZombie
-                                                             //minor:kMinorFencerB
-                                                      identifier:kBeaconIdentifier2];
+                                                                    major:kMajorZombie
+                             //minor:kMinorFencerB
+                                                               identifier:kBeaconIdentifier2];
     
     // Advertising NSDictionary objects created from the regions we defined
     // We add a local name for each, but it isn't a necessary step
@@ -163,11 +164,11 @@ static const float kLightestZombieAlpha = 0.05f;
     
     self.beaconAdvData2 = [self.beaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
     [self.beaconAdvData2  setObject:@"Healthy Beacon"
-                          forKey:CBAdvertisementDataLocalNameKey];
+                             forKey:CBAdvertisementDataLocalNameKey];
     
     self.zomBeaconAdvData2 = [self.zomBeaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
     [self.zomBeaconAdvData2 setObject:@"Zombeacon"
-                            forKey:CBAdvertisementDataLocalNameKey];
+                               forKey:CBAdvertisementDataLocalNameKey];
     
     
     // Set up audio files for playback
@@ -198,12 +199,12 @@ static const float kLightestZombieAlpha = 0.05f;
     
     // set up gestures to turn on zombification.  Right for zombies, left for healthies
     /* Right swipe
-    self.rightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                                     action:@selector(rightSwipeHandle:)];
-    
-    self.rightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.rightRecognizer setNumberOfTouchesRequired:1];
-    */
+     self.rightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+     action:@selector(rightSwipeHandle:)];
+     
+     self.rightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+     [self.rightRecognizer setNumberOfTouchesRequired:1];
+     */
     
     self.leftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                                                     action:@selector(leftSwipeHandle:)];
@@ -226,7 +227,7 @@ static const float kLightestZombieAlpha = 0.05f;
         // Create a zombeacon
         //self.greenImageBackground.alpha = 1.0f;
         //self.redImageBackground.alpha = 1.0f;
-
+        
         self.greenImageBackground.backgroundColor = self.zombieBgColor;
         self.redImageBackground.backgroundColor = self.zombieBgColor;
         self.isZombeacon = true;
@@ -239,7 +240,7 @@ static const float kLightestZombieAlpha = 0.05f;
         self.greenImageBackground.backgroundColor = [UIColor clearColor];
         self.redImageBackground.alpha = kLightestZombieAlpha;
         self.redImageBackground.backgroundColor = [UIColor clearColor];
-
+        
         self.isZombeacon = false;
         [self startBeaconingUninfected];
     }
@@ -293,6 +294,7 @@ static const float kLightestZombieAlpha = 0.05f;
 }
 
 
+
 // For debug
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral
 {
@@ -315,7 +317,12 @@ static const float kLightestZombieAlpha = 0.05f;
         CLBeacon *nearestBeacon = [beacons firstObject];
         CLBeacon *secondHit = [beacons lastObject];
         
+        NSString *minorOneID = [NSString stringWithFormat:@"%@", nearestBeacon.minor];
+        NSString *minorID = [NSString stringWithFormat:@"%@", secondHit.minor];
+        NSLog(@"Minor ID: %@", minorID);
+        NSLog(@"Minor ID CLose: %@", minorOneID);
         self.lastProximity = nearestBeacon.proximity;
+        
         
         
         // Change the opacity of the zombie hand image as an example of using the distance
@@ -372,23 +379,15 @@ static const float kLightestZombieAlpha = 0.05f;
             else if ( !self.isZombeacon && CLProximityFar == nearestBeacon.proximity )
             {
                 // Become a zombeacon!
-                [self playBite];
                 [self brainsAreTasty:YES];
                 if ([region.identifier isEqualToString:@"Fencer 1"])
                 {
-                    CFTimeInterval startTime = CACurrentMediaTime();
+                    
                     self.greenImageBackground.alpha = 1.0f;
                     
-                    CFTimeInterval now = CACurrentMediaTime();
-                    CFTimeInterval elapsed = now - startTime;
-                    //NSLog(@"Start time: %f", elapsed);
-                    /*
-                    if (elapsed < 5)
-                    {
-                        NSLog(@"Hello World");
-                        self.redImageBackground.alpha = 1.0f;
-                    }
-                    */
+                    uint64_t start = mach_absolute_time();
+                    NSLog(@"Start: %qu", start);
+                    
                 }
                 if ([region.identifier isEqualToString:@"Fencer 2"])
                 {
@@ -397,7 +396,11 @@ static const float kLightestZombieAlpha = 0.05f;
                     
                     CFTimeInterval now = CACurrentMediaTime();
                     CFTimeInterval elapsed = now - startTime;
-                    NSLog(@"Start time: %f", elapsed);
+                    //NSLog(@"Start time: %f", elapsed);
+                    
+                    uint64_t start = mach_absolute_time();
+                    NSLog(@"Start: %qu", start);
+                    
                     if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
                     {
                         self.greenImageBackground.alpha = 1.0f;
@@ -407,15 +410,13 @@ static const float kLightestZombieAlpha = 0.05f;
             else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
             {
                 // Become a zombeacon!
-                [self playBite];
                 [self brainsAreTasty:YES];
                 if ([region.identifier isEqualToString:@"Fencer 1"])
                 {
-                    CFTimeInterval startTime = CACurrentMediaTime();
                     self.greenImageBackground.alpha = 1.0f;
                     
-                    CFTimeInterval now = CACurrentMediaTime();
-                    CFTimeInterval elapsed = now - startTime;
+                    uint64_t start = mach_absolute_time();
+                    NSLog(@"Start: %qu", start);
                     //NSLog(@"Start time: %f", elapsed);
                     /*
                      if (elapsed < 5)
@@ -433,6 +434,9 @@ static const float kLightestZombieAlpha = 0.05f;
                     CFTimeInterval now = CACurrentMediaTime();
                     CFTimeInterval elapsed = now - startTime;
                     
+                    uint64_t start = mach_absolute_time();
+                    NSLog(@"Start: %qu", start);
+                    
                     if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
                     {
                         self.greenImageBackground.alpha = 1.0f;
@@ -442,7 +446,6 @@ static const float kLightestZombieAlpha = 0.05f;
             else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
             {
                 // Become a zombeaco
-                [self playBite];
                 [self brainsAreTasty:YES];
                 if ([region.identifier isEqualToString:@"Fencer 1"])
                 {
@@ -451,12 +454,17 @@ static const float kLightestZombieAlpha = 0.05f;
                     
                     CFTimeInterval now = CACurrentMediaTime();
                     CFTimeInterval elapsed = now - startTime;
+                    
+                    uint64_t start = mach_absolute_time();
+                    
+                    NSLog(@"Start: %qu", start);
+                    
                     /*
-                    if (elapsed < 5)
-                    {
-                        NSLog(@"Hello World");
-                        self.redImageBackground.alpha = 1.0f;
-                    }
+                     if (elapsed < 5)
+                     {
+                     NSLog(@"Hello World");
+                     self.redImageBackground.alpha = 1.0f;
+                     }
                      */
                 }
                 if ([region.identifier isEqualToString:@"Fencer 2"])
@@ -466,7 +474,11 @@ static const float kLightestZombieAlpha = 0.05f;
                     
                     CFTimeInterval now = CACurrentMediaTime();
                     CFTimeInterval elapsed = now - startTime;
-                    NSLog(@"Start time: %f", elapsed);
+                    //NSLog(@"Start time: %f", elapsed);
+                    
+                    uint64_t start = mach_absolute_time();
+                    NSLog(@"Start: %qu", start);
+                    
                     if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
                     {
                         self.greenImageBackground.alpha = 1.0f;
@@ -475,10 +487,12 @@ static const float kLightestZombieAlpha = 0.05f;
             }
             
         }
-        NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
+        //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
         
     }
-    NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
+    //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
+    uint64_t start = mach_absolute_time();
+    NSLog(@"Start: %qu", start);
 }
 
 // Just for Debug
@@ -495,11 +509,11 @@ static const float kLightestZombieAlpha = 0.05f;
 
 // Gesture that sets the state to zombeacon
 /* Right Swipe Useless
-- (void)rightSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer
-{
-    [self playBite];
-    [self brainsAreTasty:YES];
-}
+ - (void)rightSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer
+ {
+ [self playBite];
+ [self brainsAreTasty:YES];
+ }
  */
 
 // Gesture that sets the state to a healthy beacon
@@ -516,18 +530,6 @@ static const float kLightestZombieAlpha = 0.05f;
     
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:self.zombieSounds[randSoundIdx]
                                                               error:&error];
-    [self.audioPlayer prepareToPlay];
-    [self.audioPlayer play];
-}
-
-// Always play the same sound for a bite
--(void)playBite
-{
-    NSURL *zombieSoundBiteUrl = [[NSBundle mainBundle] URLForResource:@"ZombieBite2"
-                                                        withExtension:@"mp3"];
-    
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:zombieSoundBiteUrl
-                                                              error:nil];
     [self.audioPlayer prepareToPlay];
     [self.audioPlayer play];
 }
