@@ -40,7 +40,6 @@
 @property (strong, nonatomic) CLLocationManager *locManager;
 @property (strong, nonatomic) CLBeaconRegion *beaconRegion;
 @property (strong, nonatomic) CLBeaconRegion *zomBeaconRegion;
-@property (strong, nonatomic) CLBeaconRegion *beaconRegion2;
 @property (strong, nonatomic) CLBeaconRegion *zomBeaconRegion2;
 @property (assign, nonatomic) CLProximity lastProximity;
 @property (assign, nonatomic) int proxFilter;
@@ -49,7 +48,6 @@
 @property (strong, nonatomic) CBPeripheralManager *beaconManager;
 @property (strong, nonatomic) NSMutableDictionary *beaconAdvData;
 @property (strong, nonatomic) NSMutableDictionary *zomBeaconAdvData;
-@property (strong, nonatomic) NSMutableDictionary *beaconAdvData2;
 @property (strong, nonatomic) NSMutableDictionary *zomBeaconAdvData2;
 
 // AVFoundation Framework
@@ -158,16 +156,6 @@ static const float kLightestZombieAlpha = 0.05f;
     self.zomBeaconAdvData2 = [self.zomBeaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
     [self.zomBeaconAdvData2 setObject:@"Zombeacon"
                                forKey:CBAdvertisementDataLocalNameKey];
-    
-    
-    // Set up audio files for playback
-    NSURL *zombieSoundMoanUrl = [[NSBundle mainBundle] URLForResource:@"ZombieMoan" withExtension:@"wav"];
-    NSURL *zombieSoundAttackedUrl = [[NSBundle mainBundle] URLForResource:@"ZombieAttacked" withExtension:@"wav"];
-    NSURL *zombieSoundMoan2Url = [[NSBundle mainBundle] URLForResource:@"ZombieMoan2" withExtension:@"mp3"];
-    NSURL *zombieSoundMoan3Url = [[NSBundle mainBundle] URLForResource:@"zombieMoan3" withExtension:@"mp3"];
-    
-    self.zombieSounds = [NSArray arrayWithObjects:zombieSoundMoanUrl, zombieSoundMoan2Url,
-                         zombieSoundMoan3Url, zombieSoundAttackedUrl, nil];
     
     // Set up the zombie background picture
     UIImage* greenPattern = [UIImage imageNamed:@"green_light.jpg"];
