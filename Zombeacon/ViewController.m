@@ -60,7 +60,7 @@
 @property (strong, nonatomic) UIImageView *greenImageBackground;
 @property (strong, nonatomic) UIImageView *redImageBackground;
 @property (strong, nonatomic) UIColor *zombieBgColor;
-@property (strong, nonatomic) UISwipeGestureRecognizer *rightRecognizer;
+//@property (strong, nonatomic) UISwipeGestureRecognizer *rightRecognizer;
 @property (strong, nonatomic) UISwipeGestureRecognizer *leftRecognizer;
 @property (assign, nonatomic) bool isZombeacon;
 
@@ -73,12 +73,14 @@
 
 // Beacon configuration
 static const int kMajorUninfected = 0;
+static const int kMinorFencerA = 0;
 static const int kMajorZombie = 1;
 //NSString *const kBeaconUuid = @"95C8A575-0354-4ADE-8C6C-33E72CD84E9F";
 NSString *const kBeaconUuid = @"A495FF10-C5B1-4B44-B512-1370F02D74DE";
 NSString *const kBeaconIdentifier = @"Fencer 1";
 
 // Second Blue Bean
+static const int kMinorFencerB = 23;
 NSString *const kBeaconUuid2= @"A4951234-C5B1-4B44-B512-1370F02D74DE";
 NSString *const kBeaconIdentifier2 = @"Fencer 2";
 
@@ -131,18 +133,22 @@ static const float kLightestZombieAlpha = 0.05f;
     // have used minor IDs in place of major IDs as well.
     self.beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
                                                                 major:kMajorUninfected
+                                                                //minor:kMinorFencerA
                                                            identifier:kBeaconIdentifier];
     
     self.zomBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
                                                                    major:kMajorZombie
+                                                                   //minor:kMinorFencerA
                                                               identifier:kBeaconIdentifier];
     
     self.beaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
                                                               major:kMajorUninfected
+                                                              //minor:kMinorFencerB
                                                        identifier:kBeaconIdentifier2];
     
     self.zomBeaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
                                                              major:kMajorZombie
+                                                             //minor:kMinorFencerB
                                                       identifier:kBeaconIdentifier2];
     
     // Advertising NSDictionary objects created from the regions we defined
@@ -175,7 +181,7 @@ static const float kLightestZombieAlpha = 0.05f;
     
     // Set up the zombie background picture
     UIImage* greenPattern = [UIImage imageNamed:@"green_light.jpg"];
-    UIImage* redPattern = [UIImage imageNamed:@"red_light.png"];
+    UIImage* redPattern = [UIImage imageNamed:@"red_light.jpg"];
     self.zombieBgColor = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.3];
     self.greenImageBackground = [[UIImageView alloc] initWithImage:greenPattern];
     self.redImageBackground = [[UIImageView alloc] initWithImage:redPattern];
@@ -191,11 +197,13 @@ static const float kLightestZombieAlpha = 0.05f;
     [self.view sendSubviewToBack:self.redImageBackground];
     
     // set up gestures to turn on zombification.  Right for zombies, left for healthies
+    /* Right swipe
     self.rightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                                                      action:@selector(rightSwipeHandle:)];
     
     self.rightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
     [self.rightRecognizer setNumberOfTouchesRequired:1];
+    */
     
     self.leftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                                                     action:@selector(leftSwipeHandle:)];
@@ -203,7 +211,7 @@ static const float kLightestZombieAlpha = 0.05f;
     self.leftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.leftRecognizer setNumberOfTouchesRequired:1];
     
-    [self.view addGestureRecognizer:self.rightRecognizer];
+    //[self.view addGestureRecognizer:self.rightRecognizer]; --Right Swipe Useless
     [self.view addGestureRecognizer:self.leftRecognizer];
     
     // Start looking for zombies
@@ -244,16 +252,16 @@ static const float kLightestZombieAlpha = 0.05f;
 -(void)startBeaconingUninfected
 {
     // Advertise as a healthy beacon
-    [self.beaconManager stopAdvertising];
+    //[self.beaconManager stopAdvertising];
     
-    [self.locManager stopMonitoringForRegion:self.beaconRegion];
-    [self.locManager stopRangingBeaconsInRegion:self.beaconRegion];
+    //[self.locManager stopMonitoringForRegion:self.beaconRegion];
+    //[self.locManager stopRangingBeaconsInRegion:self.beaconRegion];
     
     [self.locManager startMonitoringForRegion:self.zomBeaconRegion];
     [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion];
     
-    [self.locManager stopMonitoringForRegion:self.beaconRegion2];
-    [self.locManager stopRangingBeaconsInRegion:self.beaconRegion2];
+    //[self.locManager stopMonitoringForRegion:self.beaconRegion2];
+    //[self.locManager stopRangingBeaconsInRegion:self.beaconRegion2];
     
     [self.locManager startMonitoringForRegion:self.zomBeaconRegion2];
     [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion2];
@@ -264,17 +272,19 @@ static const float kLightestZombieAlpha = 0.05f;
 // Starts monitoring for uninfected beacons and advertises itself as a zombeacon
 -(void)startBeaconingInfected
 {
-    [self.beaconManager stopAdvertising];
+    //[self.beaconManager stopAdvertising];
     
-    [self.locManager stopMonitoringForRegion:self.zomBeaconRegion];
-    [self.locManager stopRangingBeaconsInRegion:self.zomBeaconRegion];
+    //Want to keep looking for beacons
+    //[self.locManager stopMonitoringForRegion:self.zomBeaconRegion];
+    //[self.locManager stopRangingBeaconsInRegion:self.zomBeaconRegion];
     
     
     [self.locManager startMonitoringForRegion:self.beaconRegion];
     [self.locManager startRangingBeaconsInRegion:self.beaconRegion];
     
-    [self.locManager stopMonitoringForRegion:self.beaconRegion2];
-    [self.locManager stopRangingBeaconsInRegion:self.beaconRegion2];
+    
+    //[self.locManager stopMonitoringForRegion:self.beaconRegion2];
+    //[self.locManager stopRangingBeaconsInRegion:self.beaconRegion2];
     
     [self.locManager startMonitoringForRegion:self.zomBeaconRegion2];
     [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion2];
@@ -303,8 +313,10 @@ static const float kLightestZombieAlpha = 0.05f;
     if ([beacons count] > 0)
     {
         CLBeacon *nearestBeacon = [beacons firstObject];
+        CLBeacon *secondHit = [beacons lastObject];
         
         self.lastProximity = nearestBeacon.proximity;
+        
         
         // Change the opacity of the zombie hand image as an example of using the distance
         // reading returned by CoreLocation
@@ -364,11 +376,32 @@ static const float kLightestZombieAlpha = 0.05f;
                 [self brainsAreTasty:YES];
                 if ([region.identifier isEqualToString:@"Fencer 1"])
                 {
+                    CFTimeInterval startTime = CACurrentMediaTime();
                     self.greenImageBackground.alpha = 1.0f;
+                    
+                    CFTimeInterval now = CACurrentMediaTime();
+                    CFTimeInterval elapsed = now - startTime;
+                    //NSLog(@"Start time: %f", elapsed);
+                    /*
+                    if (elapsed < 5)
+                    {
+                        NSLog(@"Hello World");
+                        self.redImageBackground.alpha = 1.0f;
+                    }
+                    */
                 }
                 if ([region.identifier isEqualToString:@"Fencer 2"])
                 {
+                    CFTimeInterval startTime = CACurrentMediaTime();
                     self.redImageBackground.alpha = 1.0f;
+                    
+                    CFTimeInterval now = CACurrentMediaTime();
+                    CFTimeInterval elapsed = now - startTime;
+                    NSLog(@"Start time: %f", elapsed);
+                    if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
+                    {
+                        self.greenImageBackground.alpha = 1.0f;
+                    }
                 }
             }
             else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
@@ -378,11 +411,32 @@ static const float kLightestZombieAlpha = 0.05f;
                 [self brainsAreTasty:YES];
                 if ([region.identifier isEqualToString:@"Fencer 1"])
                 {
+                    CFTimeInterval startTime = CACurrentMediaTime();
                     self.greenImageBackground.alpha = 1.0f;
+                    
+                    CFTimeInterval now = CACurrentMediaTime();
+                    CFTimeInterval elapsed = now - startTime;
+                    //NSLog(@"Start time: %f", elapsed);
+                    /*
+                     if (elapsed < 5)
+                     {
+                     NSLog(@"Hello World");
+                     self.redImageBackground.alpha = 1.0f;
+                     }
+                     */
                 }
                 if ([region.identifier isEqualToString:@"Fencer 2"])
                 {
+                    CFTimeInterval startTime = CACurrentMediaTime();
                     self.redImageBackground.alpha = 1.0f;
+                    
+                    CFTimeInterval now = CACurrentMediaTime();
+                    CFTimeInterval elapsed = now - startTime;
+                    
+                    if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
+                    {
+                        self.greenImageBackground.alpha = 1.0f;
+                    }
                 }
             }
             else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
@@ -392,11 +446,31 @@ static const float kLightestZombieAlpha = 0.05f;
                 [self brainsAreTasty:YES];
                 if ([region.identifier isEqualToString:@"Fencer 1"])
                 {
+                    CFTimeInterval startTime = CACurrentMediaTime();
                     self.greenImageBackground.alpha = 1.0f;
+                    
+                    CFTimeInterval now = CACurrentMediaTime();
+                    CFTimeInterval elapsed = now - startTime;
+                    /*
+                    if (elapsed < 5)
+                    {
+                        NSLog(@"Hello World");
+                        self.redImageBackground.alpha = 1.0f;
+                    }
+                     */
                 }
                 if ([region.identifier isEqualToString:@"Fencer 2"])
                 {
+                    CFTimeInterval startTime = CACurrentMediaTime();
                     self.redImageBackground.alpha = 1.0f;
+                    
+                    CFTimeInterval now = CACurrentMediaTime();
+                    CFTimeInterval elapsed = now - startTime;
+                    NSLog(@"Start time: %f", elapsed);
+                    if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
+                    {
+                        self.greenImageBackground.alpha = 1.0f;
+                    }
                 }
             }
             
@@ -404,6 +478,7 @@ static const float kLightestZombieAlpha = 0.05f;
         NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
         
     }
+    NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
 }
 
 // Just for Debug
@@ -419,11 +494,13 @@ static const float kLightestZombieAlpha = 0.05f;
 }
 
 // Gesture that sets the state to zombeacon
+/* Right Swipe Useless
 - (void)rightSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     [self playBite];
     [self brainsAreTasty:YES];
 }
+ */
 
 // Gesture that sets the state to a healthy beacon
 - (void)leftSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer
