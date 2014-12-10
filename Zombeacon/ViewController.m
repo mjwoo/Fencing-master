@@ -134,22 +134,15 @@ static const float kLightestZombieAlpha = 0.05f;
     // have used minor IDs in place of major IDs as well.
     self.beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
                                                                 major:kMajorUninfected
-                         //minor:kMinorFencerA
                                                            identifier:kBeaconIdentifier];
     
     self.zomBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
                                                                    major:kMajorZombie
-                            //minor:kMinorFencerA
                                                               identifier:kBeaconIdentifier];
-    
-    self.beaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
-                                                                 major:kMajorUninfected
-                          //minor:kMinorFencerB
-                                                            identifier:kBeaconIdentifier2];
+
     
     self.zomBeaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
                                                                     major:kMajorZombie
-                             //minor:kMinorFencerB
                                                                identifier:kBeaconIdentifier2];
     
     // Advertising NSDictionary objects created from the regions we defined
@@ -161,10 +154,6 @@ static const float kLightestZombieAlpha = 0.05f;
     self.zomBeaconAdvData = [self.zomBeaconRegion peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
     [self.zomBeaconAdvData setObject:@"Zombeacon"
                               forKey:CBAdvertisementDataLocalNameKey];
-    
-    self.beaconAdvData2 = [self.beaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
-    [self.beaconAdvData2  setObject:@"Healthy Beacon"
-                             forKey:CBAdvertisementDataLocalNameKey];
     
     self.zomBeaconAdvData2 = [self.zomBeaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
     [self.zomBeaconAdvData2 setObject:@"Zombeacon"
@@ -261,9 +250,6 @@ static const float kLightestZombieAlpha = 0.05f;
     [self.locManager startMonitoringForRegion:self.zomBeaconRegion];
     [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion];
     
-    //[self.locManager stopMonitoringForRegion:self.beaconRegion2];
-    //[self.locManager stopRangingBeaconsInRegion:self.beaconRegion2];
-    
     [self.locManager startMonitoringForRegion:self.zomBeaconRegion2];
     [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion2];
     
@@ -279,13 +265,8 @@ static const float kLightestZombieAlpha = 0.05f;
     //[self.locManager stopMonitoringForRegion:self.zomBeaconRegion];
     //[self.locManager stopRangingBeaconsInRegion:self.zomBeaconRegion];
     
-    
     [self.locManager startMonitoringForRegion:self.beaconRegion];
     [self.locManager startRangingBeaconsInRegion:self.beaconRegion];
-    
-    
-    //[self.locManager stopMonitoringForRegion:self.beaconRegion2];
-    //[self.locManager stopRangingBeaconsInRegion:self.beaconRegion2];
     
     [self.locManager startMonitoringForRegion:self.zomBeaconRegion2];
     [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion2];
