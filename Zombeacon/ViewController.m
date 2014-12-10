@@ -344,7 +344,7 @@ static const float kLightestZombieAlpha = 0.05f;
         else if ( !self.isZombeacon && CLProximityFar == nearestBeacon.proximity )
         {
             // Become a zombeacon!
-            [self brainsAreTasty:YES];
+            //[self brainsAreTasty:YES];
             if ([nearestBeacon.minor isEqualToNumber:@250])
             {
                 
@@ -375,7 +375,7 @@ static const float kLightestZombieAlpha = 0.05f;
         else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
         {
             // Become a zombeacon!
-            [self brainsAreTasty:YES];
+            //[self brainsAreTasty:YES];
             if ([nearestBeacon.minor isEqualToNumber:@250])
             {
                 self.greenImageBackground.alpha = 1.0f;
@@ -411,7 +411,7 @@ static const float kLightestZombieAlpha = 0.05f;
         else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
         {
             // Become a zombeaco
-            [self brainsAreTasty:YES];
+            //[self brainsAreTasty:YES];
             if ([nearestBeacon.minor isEqualToNumber:@250])
             {
                 CFTimeInterval startTime = CACurrentMediaTime();
