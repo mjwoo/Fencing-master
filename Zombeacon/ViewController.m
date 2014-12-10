@@ -281,184 +281,181 @@ static const float kLightestZombieAlpha = 0.05f;
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
     // We're only concerned with the nearest beacon, which is always the first object
-    if ([beacons count] > 0)
+    CLBeacon *nearestBeacon = [beacons firstObject];
+    CLBeacon *secondHit = [beacons lastObject];
+    
+    NSString *minorOneID = [NSString stringWithFormat:@"%@", nearestBeacon.minor];
+    NSString *minorID = [NSString stringWithFormat:@"%@", secondHit.minor];
+    NSLog(@"Minor ID: %@", minorID);
+    NSLog(@"Minor ID CLose: %@", minorOneID);
+    self.lastProximity = nearestBeacon.proximity;
+    
+    
+    
+    // Change the opacity of the zombie hand image as an example of using the distance
+    // reading returned by CoreLocation
+    /*
+     if ( !self.isZombeacon)
+     {
+     //  assuming a reasonable max distance of kLongestBeaconDistance
+     float newAlpha = ( kLongestBeaconDistance - nearestBeacon.accuracy ) / kLongestBeaconDistance;
+     
+     // If accuracy is farther than kLongestBeaconDistance, set opacity to the lightest defined
+     if ( newAlpha < kLightestZombieAlpha )
+     {
+     newAlpha = kLightestZombieAlpha;
+     }
+     
+     self.zombieImageBackground.alpha = newAlpha;
+     NSLog(@"Nearest: %f", nearestBeacon.accuracy);
+     }
+     */
+    
+    // Debounce style filter - reset if proximity changes
+    // This filter will ensure that a single reading of "Near" or "Immediate" doesn't
+    // trigger a sound playback or beacon state switch immediately.  These are
+    // George A. Romero style Zombeacons.
+    if (nearestBeacon.proximity != self.lastProximity)
     {
-        CLBeacon *nearestBeacon = [beacons firstObject];
-        CLBeacon *secondHit = [beacons lastObject];
-        
-        NSString *minorOneID = [NSString stringWithFormat:@"%@", nearestBeacon.minor];
-        NSString *minorID = [NSString stringWithFormat:@"%@", secondHit.minor];
-        NSLog(@"Minor ID: %@", minorID);
-        NSLog(@"Minor ID CLose: %@", minorOneID);
-        self.lastProximity = nearestBeacon.proximity;
-        
-        
-        
-        // Change the opacity of the zombie hand image as an example of using the distance
-        // reading returned by CoreLocation
-        /*
-         if ( !self.isZombeacon)
-         {
-         //  assuming a reasonable max distance of kLongestBeaconDistance
-         float newAlpha = ( kLongestBeaconDistance - nearestBeacon.accuracy ) / kLongestBeaconDistance;
-         
-         // If accuracy is farther than kLongestBeaconDistance, set opacity to the lightest defined
-         if ( newAlpha < kLightestZombieAlpha )
-         {
-         newAlpha = kLightestZombieAlpha;
-         }
-         
-         self.zombieImageBackground.alpha = newAlpha;
-         NSLog(@"Nearest: %f", nearestBeacon.accuracy);
-         }
-         */
-        
-        // Debounce style filter - reset if proximity changes
-        // This filter will ensure that a single reading of "Near" or "Immediate" doesn't
-        // trigger a sound playback or beacon state switch immediately.  These are
-        // George A. Romero style Zombeacons.
-        if (nearestBeacon.proximity != self.lastProximity)
+        self.proxFilter = 0;
+    }
+    else
+    {
+        self.proxFilter++;
+    }
+    
+    // Beacon must be in a certain proximity for a set amount of time before triggering events
+    if ( self.proxFilter >= kProxFilterCount )
+    {
+        // If you are a zombeacon, and you notice a healthy beacon that is at least near to you,
+        // groan as your hunger for brains is all consuming
+        if ( self.isZombeacon
+            && ( CLProximityNear == nearestBeacon.proximity
+                || CLProximityImmediate == nearestBeacon.proximity ) )
         {
-            self.proxFilter = 0;
-        }
-        else
-        {
-            self.proxFilter++;
-        }
-        
-        // Beacon must be in a certain proximity for a set amount of time before triggering events
-        if ( self.proxFilter >= kProxFilterCount )
-        {
-            // If you are a zombeacon, and you notice a healthy beacon that is at least near to you,
-            // groan as your hunger for brains is all consuming
-            if ( self.isZombeacon
-                && ( CLProximityNear == nearestBeacon.proximity
-                    || CLProximityImmediate == nearestBeacon.proximity ) )
-            {
-                self.zombiePlayFilter++;
-                
-                if ( self.zombiePlayFilter >= kZombiePlayDelay )
-                {
-                    // Make sound
-                    [self playRandomZombieSound];
-                    self.zombiePlayFilter = 0;
-                }
-            }
-            // The healthy beacon is bit if the zombeacon is at an immediate distance
-            else if ( !self.isZombeacon && CLProximityFar == nearestBeacon.proximity )
-            {
-                // Become a zombeacon!
-                [self brainsAreTasty:YES];
-                if ([region.identifier isEqualToString:@"Fencer 1"])
-                {
-                    
-                    self.greenImageBackground.alpha = 1.0f;
-                    
-                    uint64_t start = mach_absolute_time();
-                    NSLog(@"Start: %qu", start);
-                    
-                }
-                if ([region.identifier isEqualToString:@"Fencer 2"])
-                {
-                    CFTimeInterval startTime = CACurrentMediaTime();
-                    self.redImageBackground.alpha = 1.0f;
-                    
-                    CFTimeInterval now = CACurrentMediaTime();
-                    CFTimeInterval elapsed = now - startTime;
-                    //NSLog(@"Start time: %f", elapsed);
-                    
-                    uint64_t start = mach_absolute_time();
-                    NSLog(@"Start: %qu", start);
-                    
-                    if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
-                    {
-                        self.greenImageBackground.alpha = 1.0f;
-                    }
-                }
-            }
-            else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
-            {
-                // Become a zombeacon!
-                [self brainsAreTasty:YES];
-                if ([region.identifier isEqualToString:@"Fencer 1"])
-                {
-                    self.greenImageBackground.alpha = 1.0f;
-                    
-                    uint64_t start = mach_absolute_time();
-                    NSLog(@"Start: %qu", start);
-                    //NSLog(@"Start time: %f", elapsed);
-                    /*
-                     if (elapsed < 5)
-                     {
-                     NSLog(@"Hello World");
-                     self.redImageBackground.alpha = 1.0f;
-                     }
-                     */
-                }
-                if ([region.identifier isEqualToString:@"Fencer 2"])
-                {
-                    CFTimeInterval startTime = CACurrentMediaTime();
-                    self.redImageBackground.alpha = 1.0f;
-                    
-                    CFTimeInterval now = CACurrentMediaTime();
-                    CFTimeInterval elapsed = now - startTime;
-                    
-                    uint64_t start = mach_absolute_time();
-                    NSLog(@"Start: %qu", start);
-                    
-                    if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
-                    {
-                        self.greenImageBackground.alpha = 1.0f;
-                    }
-                }
-            }
-            else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
-            {
-                // Become a zombeaco
-                [self brainsAreTasty:YES];
-                if ([region.identifier isEqualToString:@"Fencer 1"])
-                {
-                    CFTimeInterval startTime = CACurrentMediaTime();
-                    self.greenImageBackground.alpha = 1.0f;
-                    
-                    CFTimeInterval now = CACurrentMediaTime();
-                    CFTimeInterval elapsed = now - startTime;
-                    
-                    uint64_t start = mach_absolute_time();
-                    
-                    NSLog(@"Start: %qu", start);
-                    
-                    /*
-                     if (elapsed < 5)
-                     {
-                     NSLog(@"Hello World");
-                     self.redImageBackground.alpha = 1.0f;
-                     }
-                     */
-                }
-                if ([region.identifier isEqualToString:@"Fencer 2"])
-                {
-                    CFTimeInterval startTime = CACurrentMediaTime();
-                    self.redImageBackground.alpha = 1.0f;
-                    
-                    CFTimeInterval now = CACurrentMediaTime();
-                    CFTimeInterval elapsed = now - startTime;
-                    //NSLog(@"Start time: %f", elapsed);
-                    
-                    uint64_t start = mach_absolute_time();
-                    NSLog(@"Start: %qu", start);
-                    
-                    if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
-                    {
-                        self.greenImageBackground.alpha = 1.0f;
-                    }
-                }
-            }
+            self.zombiePlayFilter++;
             
+            if ( self.zombiePlayFilter >= kZombiePlayDelay )
+            {
+                // Make sound
+                [self playRandomZombieSound];
+                self.zombiePlayFilter = 0;
+            }
         }
-        //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
+        // The healthy beacon is bit if the zombeacon is at an immediate distance
+        else if ( !self.isZombeacon && CLProximityFar == nearestBeacon.proximity )
+        {
+            // Become a zombeacon!
+            [self brainsAreTasty:YES];
+            if ([region.identifier isEqualToString:@"Fencer 1"])
+            {
+                
+                self.greenImageBackground.alpha = 1.0f;
+                
+                uint64_t start = mach_absolute_time();
+                NSLog(@"Start: %qu", start);
+                
+            }
+            if ([region.identifier isEqualToString:@"Fencer 2"])
+            {
+                CFTimeInterval startTime = CACurrentMediaTime();
+                self.redImageBackground.alpha = 1.0f;
+                
+                CFTimeInterval now = CACurrentMediaTime();
+                CFTimeInterval elapsed = now - startTime;
+                //NSLog(@"Start time: %f", elapsed);
+                
+                uint64_t start = mach_absolute_time();
+                NSLog(@"Start: %qu", start);
+                
+                if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
+                {
+                    self.greenImageBackground.alpha = 1.0f;
+                }
+            }
+        }
+        else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
+        {
+            // Become a zombeacon!
+            [self brainsAreTasty:YES];
+            if ([region.identifier isEqualToString:@"Fencer 1"])
+            {
+                self.greenImageBackground.alpha = 1.0f;
+                
+                uint64_t start = mach_absolute_time();
+                NSLog(@"Start: %qu", start);
+                //NSLog(@"Start time: %f", elapsed);
+                /*
+                 if (elapsed < 5)
+                 {
+                 NSLog(@"Hello World");
+                 self.redImageBackground.alpha = 1.0f;
+                 }
+                 */
+            }
+            if ([region.identifier isEqualToString:@"Fencer 2"])
+            {
+                CFTimeInterval startTime = CACurrentMediaTime();
+                self.redImageBackground.alpha = 1.0f;
+                
+                CFTimeInterval now = CACurrentMediaTime();
+                CFTimeInterval elapsed = now - startTime;
+                
+                uint64_t start = mach_absolute_time();
+                NSLog(@"Start: %qu", start);
+                
+                if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
+                {
+                    self.greenImageBackground.alpha = 1.0f;
+                }
+            }
+        }
+        else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
+        {
+            // Become a zombeaco
+            [self brainsAreTasty:YES];
+            if ([region.identifier isEqualToString:@"Fencer 1"])
+            {
+                CFTimeInterval startTime = CACurrentMediaTime();
+                self.greenImageBackground.alpha = 1.0f;
+                
+                CFTimeInterval now = CACurrentMediaTime();
+                CFTimeInterval elapsed = now - startTime;
+                
+                uint64_t start = mach_absolute_time();
+                
+                NSLog(@"Start: %qu", start);
+                
+                /*
+                 if (elapsed < 5)
+                 {
+                 NSLog(@"Hello World");
+                 self.redImageBackground.alpha = 1.0f;
+                 }
+                 */
+            }
+            if ([region.identifier isEqualToString:@"Fencer 2"])
+            {
+                CFTimeInterval startTime = CACurrentMediaTime();
+                self.redImageBackground.alpha = 1.0f;
+                
+                CFTimeInterval now = CACurrentMediaTime();
+                CFTimeInterval elapsed = now - startTime;
+                //NSLog(@"Start time: %f", elapsed);
+                
+                uint64_t start = mach_absolute_time();
+                NSLog(@"Start: %qu", start);
+                
+                if ([region.identifier isEqualToString:@"Fencer 1"] && elapsed < 5)
+                {
+                    self.greenImageBackground.alpha = 1.0f;
+                }
+            }
+        }
         
     }
+        //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
+        
     //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
     uint64_t start = mach_absolute_time();
     NSLog(@"Start: %qu", start);
