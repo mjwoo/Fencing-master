@@ -353,7 +353,7 @@ static const float kLightestZombieAlpha = 0.05f;
                 
                 uint64_t start = mach_absolute_time();
                 
-                while (convertTime(start)) {
+                while (timeDifference(start) < [NUMBER]) {
                     <#statements#>
                 }
                 
