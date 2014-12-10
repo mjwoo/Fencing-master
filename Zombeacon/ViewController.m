@@ -72,14 +72,12 @@
 
 // Beacon configuration
 static const int kMajorUninfected = 0;
-static const int kMinorFencerA = 0;
 static const int kMajorZombie = 1;
 //NSString *const kBeaconUuid = @"95C8A575-0354-4ADE-8C6C-33E72CD84E9F";
 NSString *const kBeaconUuid = @"A495FF10-C5B1-4B44-B512-1370F02D74DE";
 NSString *const kBeaconIdentifier = @"Fencer 1";
 
 // Second Blue Bean
-static const int kMinorFencerB = 23;
 NSString *const kBeaconUuid2= @"A4951234-C5B1-4B44-B512-1370F02D74DE";
 NSString *const kBeaconIdentifier2 = @"Fencer 2";
 
@@ -347,7 +345,7 @@ static const float kLightestZombieAlpha = 0.05f;
         {
             // Become a zombeacon!
             [self brainsAreTasty:YES];
-            if ([region.identifier isEqualToString:@"Fencer 1"])
+            if ([nearestBeacon.minor isEqualToNumber:@250])
             {
                 
                 self.greenImageBackground.alpha = 1.0f;
@@ -356,7 +354,7 @@ static const float kLightestZombieAlpha = 0.05f;
                 NSLog(@"Start: %qu", start);
                 
             }
-            if ([region.identifier isEqualToString:@"Fencer 2"])
+            if ([nearestBeacon.minor isEqualToNumber:@23])
             {
                 CFTimeInterval startTime = CACurrentMediaTime();
                 self.redImageBackground.alpha = 1.0f;
@@ -378,7 +376,7 @@ static const float kLightestZombieAlpha = 0.05f;
         {
             // Become a zombeacon!
             [self brainsAreTasty:YES];
-            if ([region.identifier isEqualToString:@"Fencer 1"])
+            if ([nearestBeacon.minor isEqualToNumber:@250])
             {
                 self.greenImageBackground.alpha = 1.0f;
                 
@@ -393,7 +391,7 @@ static const float kLightestZombieAlpha = 0.05f;
                  }
                  */
             }
-            if ([region.identifier isEqualToString:@"Fencer 2"])
+            if ([nearestBeacon.minor isEqualToNumber:@23])
             {
                 CFTimeInterval startTime = CACurrentMediaTime();
                 self.redImageBackground.alpha = 1.0f;
@@ -414,7 +412,7 @@ static const float kLightestZombieAlpha = 0.05f;
         {
             // Become a zombeaco
             [self brainsAreTasty:YES];
-            if ([region.identifier isEqualToString:@"Fencer 1"])
+            if ([nearestBeacon.minor isEqualToNumber:@250])
             {
                 CFTimeInterval startTime = CACurrentMediaTime();
                 self.greenImageBackground.alpha = 1.0f;
@@ -434,7 +432,7 @@ static const float kLightestZombieAlpha = 0.05f;
                  }
                  */
             }
-            if ([region.identifier isEqualToString:@"Fencer 2"])
+            if ([nearestBeacon.minor isEqualToNumber:@23])
             {
                 CFTimeInterval startTime = CACurrentMediaTime();
                 self.redImageBackground.alpha = 1.0f;
