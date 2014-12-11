@@ -377,21 +377,46 @@ static uint64_t globalRed = 0;
         {
             // Become a zombeacon!
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f)
+
+            // Received green packet and both score sides are blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
-                
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f)
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == 1.0f)
+            {
+                self.greenImageBackground.alpha = 1.0f;
+            }
+
+            // Received red packet and both score sides are blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 0.5f)
+            {
+                self.redImageBackground.alpha = 1.0f;
+                globalRed = mach_absolute_time();
+            }
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 1.0f)
             {
                 self.redImageBackground.alpha = 1.0f;
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f)
+            // Receives green packet and red is lit but green is blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 0.5f)
             {
                 [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
                 
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f)
+            //Receives green packet and both are lit
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 1.0f)
+            {
+                [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
+                
+            }
+            //Receives red packet and green is lit but red is blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 0.5f)
+            {
+                [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
+            }
+            //Receives red packet and both are lit
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 1.0f)
             {
                 [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
@@ -400,21 +425,44 @@ static uint64_t globalRed = 0;
         {
             // Become a zombeacon!
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f)
+            // Received green packet and both score sides are blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
-                globalGreen = mach_absolute_time();
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f)
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == 1.0f)
+            {
+                self.greenImageBackground.alpha = 1.0f;
+            }
+            // Received red packet and both score sides are blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 0.5f)
+            {
+                self.redImageBackground.alpha = 1.0f;
+                globalRed = mach_absolute_time();
+            }
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 1.0f)
             {
                 self.redImageBackground.alpha = 1.0f;
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f)
+            // Receives green packet and red is lit but green is blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 0.5f)
             {
                 [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
                 
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f)
+            //Receives green packet and both are lit
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 1.0f)
+            {
+                [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
+                
+            }
+            //Receives red packet and green is lit but red is blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 0.5f)
+            {
+                [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
+            }
+            //Receives red packet and both are lit
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 1.0f)
             {
                 [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
@@ -423,21 +471,44 @@ static uint64_t globalRed = 0;
         {
             // Become a zombeaco
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f)
+            // Received green packet and both score sides are blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
-
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f)
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == 1.0f)
+            {
+                self.greenImageBackground.alpha = 1.0f;
+            }
+            // Received red packet and both score sides are blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 0.5f)
+            {
+                self.redImageBackground.alpha = 1.0f;
+                globalRed = mach_absolute_time();
+            }
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 1.0f)
             {
                 self.redImageBackground.alpha = 1.0f;
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f)
+            // Receives green packet and red is lit but green is blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 0.5f)
             {
                 [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
                 
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f)
+            //Receives green packet and both are lit
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 1.0f)
+            {
+                [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
+                
+            }
+            //Receives red packet and green is lit but red is blank
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 0.5f)
+            {
+                [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
+            }
+            //Receives red packet and both are lit
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 1.0f)
             {
                 [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
