@@ -319,26 +319,6 @@ static const float kLightestZombieAlpha = 0.05f;
     self.lastProximity = nearestBeacon.proximity;
     
     
-    
-    // Change the opacity of the zombie hand image as an example of using the distance
-    // reading returned by CoreLocation
-    /*
-     if ( !self.isZombeacon)
-     {
-     //  assuming a reasonable max distance of kLongestBeaconDistance
-     float newAlpha = ( kLongestBeaconDistance - nearestBeacon.accuracy ) / kLongestBeaconDistance;
-     
-     // If accuracy is farther than kLongestBeaconDistance, set opacity to the lightest defined
-     if ( newAlpha < kLightestZombieAlpha )
-     {
-     newAlpha = kLightestZombieAlpha;
-     }
-     
-     self.zombieImageBackground.alpha = newAlpha;
-     NSLog(@"Nearest: %f", nearestBeacon.accuracy);
-     }
-     */
-    
     // Debounce style filter - reset if proximity changes
     // This filter will ensure that a single reading of "Near" or "Immediate" doesn't
     // trigger a sound playback or beacon state switch immediately.  These are
@@ -440,14 +420,6 @@ static const float kLightestZombieAlpha = 0.05f;
     NSLog(@"Ranging Beacons Fail");
 }
 
-// Gesture that sets the state to zombeacon
-/* Right Swipe Useless
- - (void)rightSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer
- {
- [self playBite];
- [self brainsAreTasty:YES];
- }
- */
 
 // Gesture that sets the state to a healthy beacon
 - (void)leftSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer
