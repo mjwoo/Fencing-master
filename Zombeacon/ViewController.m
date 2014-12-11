@@ -216,7 +216,7 @@ static uint64_t globalRed = 0;
 
 -(void)checkWithinTimeGreen:(NSNumber *)kMinor nearBeacon:(CLBeacon *)nearBeacon
 {
-    while ([self timeDifference:globalRed] < 100000000000)
+    while ([self timeDifference:globalRed] < 1000000000)
     {
         self.greenImageBackground.alpha = 1.0f;
         NSLog(@"TIME DIFFERENCE WORKS");
@@ -226,7 +226,7 @@ static uint64_t globalRed = 0;
 
 -(void)checkWithinTimeRed:(NSNumber *)kMinor nearBeacon:(CLBeacon *)nearBeacon
 {
-    while ([self timeDifference:globalGreen] < 100000000000)
+    while ([self timeDifference:globalGreen] < 1000000000)
     {
         self.redImageBackground.alpha = 1.0f;
         NSLog(@"TIME DIFFERENCE WORKS");
@@ -413,7 +413,6 @@ static uint64_t globalRed = 0;
             {
                 self.redImageBackground.alpha = 1.0f;
                 globalRed = mach_absolute_time();
-                NSLog(@"%lld", globalRed)
             }
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 1.0f)
             {
