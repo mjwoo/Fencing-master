@@ -252,7 +252,6 @@ static uint64_t globalRed = 0;
     NSLog(@"Minor ID CLose: %@", minorOneID);
     self.lastProximity = nearestBeacon.proximity;
     
-    // Bounce filter to set the correct proximity
     if (nearestBeacon.proximity != self.lastProximity)
     {
         self.proxFilter = 0;
