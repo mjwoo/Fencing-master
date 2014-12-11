@@ -63,7 +63,7 @@
     
     if(state == CLRegionStateInside)
     {
-        notification.alertBody = NSLocalizedString(@"Braaaiiiiins", @"");
+        notification.alertBody = NSLocalizedString(@"Fencer Touche", @"");
     }
     else
     {
