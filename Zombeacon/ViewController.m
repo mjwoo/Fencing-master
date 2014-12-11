@@ -90,6 +90,8 @@ static const int kZombiePlayDelay = 5;
 static const float kLongestBeaconDistance = 4.0;
 static const float kLightestZombieAlpha = 0.05f;
 
+static uint64_t globalGreen = 0;
+static uint64_t globalRed = 0;
 
 
 - (void)viewDidLoad
@@ -212,7 +214,7 @@ static const float kLightestZombieAlpha = 0.05f;
     self.proxFilter = 0;
 }
 
--(void)checkWithinTime:(NSNumber *)kMinor nearBeacon:(CLBeacon *)nearBeacon
+-(void)checkWithinTimeGreen:(NSNumber *)kMinor nearBeacon:(CLBeacon *)nearBeacon
 {
     uint64_t start = mach_absolute_time();
     
@@ -225,6 +227,26 @@ static const float kLightestZombieAlpha = 0.05f;
         if ([nearBeacon.minor isEqualToNumber:kMinor])
         {
             self.greenImageBackground.alpha = 1.0f;
+            [self lockout];
+        }
+        NSLog(@"TIME DIFFERENCE WORKS");
+    }
+    [self lockout];
+}
+
+-(void)checkWithinTimeRed:(NSNumber *)kMinor nearBeacon:(CLBeacon *)nearBeacon
+{
+    uint64_t start = mach_absolute_time();
+    
+    unsigned long long timing = [self timeDifference:start];
+    
+    NSLog(@"testing function: %lld", timing);
+    
+    while ([self timeDifference:start] < 1000000000)
+    {
+        if ([nearBeacon.minor isEqualToNumber:kMinor])
+        {
+            self.redImageBackground.alpha = 1.0f;
             [self lockout];
         }
         NSLog(@"TIME DIFFERENCE WORKS");
@@ -333,70 +355,91 @@ static const float kLightestZombieAlpha = 0.05f;
     }
     
     // Beacon must be in a certain proximity for a set amount of time before triggering events
-    if ( self.proxFilter >= kProxFilterCount )
-    {
-        // If you are a zombeacon, and you notice a healthy beacon that is at least near to you,
-        // groan as your hunger for brains is all consuming
-        if ( self.isZombeacon
-            && ( CLProximityNear == nearestBeacon.proximity
-                || CLProximityImmediate == nearestBeacon.proximity ) )
-        {
-            self.zombiePlayFilter++;
-            
-            if ( self.zombiePlayFilter >= kZombiePlayDelay )
-            {
-                // Make sound
-                self.zombiePlayFilter = 0;
-            }
-        }
-        // The healthy beacon is bit if the zombeacon is at an immediate distance
-        else if ( !self.isZombeacon && CLProximityFar == nearestBeacon.proximity )
+//    if ( self.proxFilter >= kProxFilterCount )
+//    {
+//        // If you are a zombeacon, and you notice a healthy beacon that is at least near to you,
+//        // groan as your hunger for brains is all consuming
+//        if ( self.isZombeacon
+//            && ( CLProximityNear == nearestBeacon.proximity
+//                || CLProximityImmediate == nearestBeacon.proximity ) )
+//        {
+//            self.zombiePlayFilter++;
+//            
+//            if ( self.zombiePlayFilter >= kZombiePlayDelay )
+//            {
+//                // Make sound
+//                self.zombiePlayFilter = 0;
+//            }
+//        }
+//        // The healthy beacon is bit if the zombeacon is at an immediate distance
+//        else
+        if ( !self.isZombeacon && CLProximityFar == nearestBeacon.proximity )
         {
             // Become a zombeacon!
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
-                [self checkWithinTime:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
                 
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f)
             {
                 self.redImageBackground.alpha = 1.0f;
-                [self checkWithinTime:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
+            }
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f)
+            {
+                [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
+                
+            }
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f)
+            {
+                [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
         }
         else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
         {
             // Become a zombeacon!
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f)
             {
-                self.greenImageBackground.alpha = 1.0f;                
-                [self checkWithinTime:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
+                self.greenImageBackground.alpha = 1.0f;
+                globalGreen = mach_absolute_time();
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f)
             {
                 self.redImageBackground.alpha = 1.0f;
-                [self checkWithinTime:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
+            }
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f)
+            {
+                [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
                 
+            }
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f)
+            {
+                [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
         }
         else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
         {
             // Become a zombeaco
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
-                [self checkWithinTime:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
 
             }
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f)
             {
                 self.redImageBackground.alpha = 1.0f;
-                [self checkWithinTime:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
+            }
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f)
+            {
+                [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
                 
+            }
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f)
+            {
+                [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
         }
         
@@ -405,7 +448,7 @@ static const float kLightestZombieAlpha = 0.05f;
         
     //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
     //uint64_t start = mach_absolute_time();
-}
+//}
 
 // Just for Debug
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region

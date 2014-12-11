@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Zombeacon/ViewController.m"
-            timestampString = "439953682.651433"
+            timestampString = "439956555.245545"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "396"
-            endingLineNumber = "396"
+            startingLineNumber = "429"
+            endingLineNumber = "429"
             landmarkName = "-locationManager:didRangeBeacons:inRegion:"
             landmarkType = "5">
          </BreakpointContent>

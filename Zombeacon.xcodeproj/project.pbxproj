@@ -11,12 +11,6 @@
 		670EBA6818C123BE00704B6B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 670EBA6618C123BE00704B6B /* InfoPlist.strings */; };
 		67211DF918C11E7400262280 /* ZombieBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 67211DF718C11E7400262280 /* ZombieBackground.png */; };
 		67211DFA18C11E7400262280 /* ZombieTransparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 67211DF818C11E7400262280 /* ZombieTransparent.png */; };
-		67211E0118C11E8000262280 /* ZombieAttacked.wav in Resources */ = {isa = PBXBuildFile; fileRef = 67211DFB18C11E8000262280 /* ZombieAttacked.wav */; };
-		67211E0218C11E8000262280 /* ZombieBite.wav in Resources */ = {isa = PBXBuildFile; fileRef = 67211DFC18C11E8000262280 /* ZombieBite.wav */; };
-		67211E0318C11E8000262280 /* ZombieBite2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 67211DFD18C11E8000262280 /* ZombieBite2.mp3 */; };
-		67211E0418C11E8000262280 /* ZombieMoan.wav in Resources */ = {isa = PBXBuildFile; fileRef = 67211DFE18C11E8000262280 /* ZombieMoan.wav */; };
-		67211E0518C11E8000262280 /* ZombieMoan2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 67211DFF18C11E8000262280 /* ZombieMoan2.mp3 */; };
-		67211E0618C11E8000262280 /* zombieMoan3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 67211E0018C11E8000262280 /* zombieMoan3.mp3 */; };
 		67211E0B18C1204900262280 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 67211E0818C1204900262280 /* AppDelegate.m */; };
 		67211E0C18C1204900262280 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 67211E0A18C1204900262280 /* ViewController.m */; };
 		67211E0E18C1206700262280 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 67211E0D18C1206700262280 /* main.m */; };
@@ -32,7 +26,6 @@
 		67E05AB418BC3BD200F0AFD8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67E05AB318BC3BD200F0AFD8 /* CoreLocation.framework */; };
 		F1935C291A36B7FB005FAA65 /* green_light.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F1935C281A36B7FB005FAA65 /* green_light.jpg */; };
 		F1935C2D1A36BF85005FAA65 /* red_light.png in Resources */ = {isa = PBXBuildFile; fileRef = F1935C2C1A36BF85005FAA65 /* red_light.png */; };
-		F1D086CA1A370F8300C94403 /* red_light.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F1D086C91A370F8300C94403 /* red_light.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,12 +43,6 @@
 		670EBA6718C123BE00704B6B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Zombeacon/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		67211DF718C11E7400262280 /* ZombieBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ZombieBackground.png; path = Images/ZombieBackground.png; sourceTree = SOURCE_ROOT; };
 		67211DF818C11E7400262280 /* ZombieTransparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ZombieTransparent.png; path = Images/ZombieTransparent.png; sourceTree = SOURCE_ROOT; };
-		67211DFB18C11E8000262280 /* ZombieAttacked.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ZombieAttacked.wav; path = Sounds/ZombieAttacked.wav; sourceTree = SOURCE_ROOT; };
-		67211DFC18C11E8000262280 /* ZombieBite.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ZombieBite.wav; path = Sounds/ZombieBite.wav; sourceTree = SOURCE_ROOT; };
-		67211DFD18C11E8000262280 /* ZombieBite2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ZombieBite2.mp3; path = Sounds/ZombieBite2.mp3; sourceTree = SOURCE_ROOT; };
-		67211DFE18C11E8000262280 /* ZombieMoan.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ZombieMoan.wav; path = Sounds/ZombieMoan.wav; sourceTree = SOURCE_ROOT; };
-		67211DFF18C11E8000262280 /* ZombieMoan2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ZombieMoan2.mp3; path = Sounds/ZombieMoan2.mp3; sourceTree = SOURCE_ROOT; };
-		67211E0018C11E8000262280 /* zombieMoan3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = zombieMoan3.mp3; path = Sounds/zombieMoan3.mp3; sourceTree = SOURCE_ROOT; };
 		67211E0718C1204900262280 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Zombeacon/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		67211E0818C1204900262280 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Zombeacon/AppDelegate.m; sourceTree = SOURCE_ROOT; };
 		67211E0918C1204900262280 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = Zombeacon/ViewController.h; sourceTree = SOURCE_ROOT; };
@@ -75,7 +62,6 @@
 		67E05AB318BC3BD200F0AFD8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F1935C281A36B7FB005FAA65 /* green_light.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = green_light.jpg; path = Images/green_light.jpg; sourceTree = SOURCE_ROOT; };
 		F1935C2C1A36BF85005FAA65 /* red_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red_light.png; path = Images/red_light.png; sourceTree = SOURCE_ROOT; };
-		F1D086C91A370F8300C94403 /* red_light.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = red_light.jpg; path = ../../final/Images/red_light.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,15 +94,8 @@
 		67C6B91618BF155600075191 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				F1D086C91A370F8300C94403 /* red_light.jpg */,
 				F1935C2C1A36BF85005FAA65 /* red_light.png */,
 				F1935C281A36B7FB005FAA65 /* green_light.jpg */,
-				67211DFB18C11E8000262280 /* ZombieAttacked.wav */,
-				67211DFC18C11E8000262280 /* ZombieBite.wav */,
-				67211DFD18C11E8000262280 /* ZombieBite2.mp3 */,
-				67211DFE18C11E8000262280 /* ZombieMoan.wav */,
-				67211DFF18C11E8000262280 /* ZombieMoan2.mp3 */,
-				67211E0018C11E8000262280 /* zombieMoan3.mp3 */,
 				67211DF718C11E7400262280 /* ZombieBackground.png */,
 				67211DF818C11E7400262280 /* ZombieTransparent.png */,
 			);
@@ -262,20 +241,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1D086CA1A370F8300C94403 /* red_light.jpg in Resources */,
-				67211E0618C11E8000262280 /* zombieMoan3.mp3 in Resources */,
 				670EBA6518C123B400704B6B /* Main.storyboard in Resources */,
-				67211E0318C11E8000262280 /* ZombieBite2.mp3 in Resources */,
-				67211E0518C11E8000262280 /* ZombieMoan2.mp3 in Resources */,
-				67211E0118C11E8000262280 /* ZombieAttacked.wav in Resources */,
-				67211E0418C11E8000262280 /* ZombieMoan.wav in Resources */,
 				F1935C291A36B7FB005FAA65 /* green_light.jpg in Resources */,
 				67211DF918C11E7400262280 /* ZombieBackground.png in Resources */,
 				F1935C2D1A36BF85005FAA65 /* red_light.png in Resources */,
 				673E677E18C1218100F0235E /* Images.xcassets in Resources */,
 				67211DFA18C11E7400262280 /* ZombieTransparent.png in Resources */,
 				670EBA6818C123BE00704B6B /* InfoPlist.strings in Resources */,
-				67211E0218C11E8000262280 /* ZombieBite.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
