@@ -252,11 +252,6 @@ static uint64_t globalRed = 0;
     NSLog(@"Minor ID CLose: %@", minorOneID);
     self.lastProximity = nearestBeacon.proximity;
     
-    
-    // Debounce style filter - reset if proximity changes
-    // This filter will ensure that a single reading of "Near" or "Immediate" doesn't
-    // trigger a sound playback or beacon state switch immediately.  These are
-    // George A. Romero style Fencebeacons.
     if (nearestBeacon.proximity != self.lastProximity)
     {
         self.proxFilter = 0;
@@ -265,30 +260,33 @@ static uint64_t globalRed = 0;
     {
         self.proxFilter++;
     }
+        // For all three proximities, we are testing the cases for each combination of lights. Since this code automatically loops, we are going 
+        // through each case and seeing if it is necessary to time for a second touch before lockout. For example, if we receive a green packet and we 
+        // know that the scoreboard displays red as lit and green as blank, then we know previously it had to have received a red packet, so we update
+        // the timer when that first red packet comes through, and now when receiving the green packet we call the checkWithinTime functions to check
+        // if the touch was in time before lockout
     
         // The healthy beacon is bit if the Fencebeacon is at an immediate distance
         if ( !self.isFencebeacon && CLProximityFar == nearestBeacon.proximity )
         {
-            // Become a Fencebeacon!
-            //[self brainsAreTasty:YES];
-
             // Received green packet and both score sides are blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
                 globalGreen = mach_absolute_time();
             }
+            // Received green packet and red is off and green is lit
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == 1.0f)
             {
                 self.greenImageBackground.alpha = 1.0f;
             }
-
             // Received red packet and both score sides are blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 0.05f)
             {
                 self.redImageBackground.alpha = 1.0f;
                 globalRed = mach_absolute_time();
             }
+            // Received red packet and red is lit
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 1.0f)
             {
                 self.redImageBackground.alpha = 1.0f;
@@ -299,25 +297,21 @@ static uint64_t globalRed = 0;
                 [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
                 
             }
-
             //Receives red packet and green is lit but red is blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 0.05f)
             {
                 [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
-            //Receives red packet and both are lit
-
         }
         else if ( !self.isFencebeacon && CLProximityImmediate == nearestBeacon.proximity )
         {
-            // Become a Fencebeacon!
-            //[self brainsAreTasty:YES];
             // Received green packet and both score sides are blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
                 globalGreen = mach_absolute_time();
             }
+            // Received Green packet and green is lit
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == 1.0f)
             {
                 self.greenImageBackground.alpha = 1.0f;
@@ -328,6 +322,7 @@ static uint64_t globalRed = 0;
                 self.redImageBackground.alpha = 1.0f;
                 globalRed = mach_absolute_time();
             }
+            // Received red packet and red is lit
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == .05f && self.redImageBackground.alpha == 1.0f)
             {
                 self.redImageBackground.alpha = 1.0f;
@@ -346,14 +341,13 @@ static uint64_t globalRed = 0;
         }
         else if ( !self.isFencebeacon && CLProximityNear == nearestBeacon.proximity )
         {
-            // Become a fencerbeaco
-            //[self brainsAreTasty:YES];
             // Received green packet and both score sides are blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
                 globalGreen = mach_absolute_time();
             }
+            // Received green packet and green is lit
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == 1.0f)
             {
                 self.greenImageBackground.alpha = 1.0f;
@@ -372,7 +366,6 @@ static uint64_t globalRed = 0;
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 0.05f)
             {
                 [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
-                
             }
             //Receives red packet and green is lit but red is blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 0.05f)
