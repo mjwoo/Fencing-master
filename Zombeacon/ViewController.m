@@ -212,7 +212,7 @@ static const float kLightestZombieAlpha = 0.05f;
     self.proxFilter = 0;
 }
 
--(void)checkWithinTime:(int)kMinorType
+-(void)checkWithinTime:(NSNumber *)kMinor nearBeacon:(CLBeacon *)nearBeacon
 {
     uint64_t start = mach_absolute_time();
     
@@ -222,7 +222,7 @@ static const float kLightestZombieAlpha = 0.05f;
 
     while ([self timeDifference:start] < 1000000000)
     {
-        if ([nearestBeacon.minor isEqualToNumber:@kMinorType])
+        if ([nearBeacon.minor isEqualToNumber:kMinor])
         {
             self.greenImageBackground.alpha = 1.0f;
             [self lockout];
@@ -346,7 +346,6 @@ static const float kLightestZombieAlpha = 0.05f;
             if ( self.zombiePlayFilter >= kZombiePlayDelay )
             {
                 // Make sound
-                [self playRandomZombieSound];
                 self.zombiePlayFilter = 0;
             }
         }
@@ -355,31 +354,31 @@ static const float kLightestZombieAlpha = 0.05f;
         {
             // Become a zombeacon!
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@kMinorGreen])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)])
             {
                 self.greenImageBackground.alpha = 1.0f;
-                [self checkWithinTime:kMinorRed];                
+                [self checkWithinTime:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
                 
             }
-            if ([nearestBeacon.minor isEqualToNumber:@kMinorRed])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)])
             {
                 self.redImageBackground.alpha = 1.0f;
-                [self checkWithinTime:kMinorGreen];
+                [self checkWithinTime:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
             }
         }
         else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
         {
             // Become a zombeacon!
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@kMinorGreen])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)])
             {
                 self.greenImageBackground.alpha = 1.0f;                
-                [self checkWithinTime:kMinorRed];
+                [self checkWithinTime:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
-            if ([nearestBeacon.minor isEqualToNumber:@kMinorRed])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)])
             {
                 self.redImageBackground.alpha = 1.0f;
-                [self checkWithinTime:kMinorGreen];
+                [self checkWithinTime:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
                 
             }
         }
@@ -387,17 +386,17 @@ static const float kLightestZombieAlpha = 0.05f;
         {
             // Become a zombeaco
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@kMinorGreen])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)])
             {
                 self.greenImageBackground.alpha = 1.0f;
-                [self checkWithinTime:kMinorRed];
+                [self checkWithinTime:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
 
             }
-            if ([nearestBeacon.minor isEqualToNumber:@kMinorRed])
+            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)])
             {
                 self.redImageBackground.alpha = 1.0f;
-                [self checkWithinTime:kMinorGreen];
-
+                [self checkWithinTime:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
+                
             }
         }
         
