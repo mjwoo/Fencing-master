@@ -1,32 +1,5 @@
 //
 //  ViewController.m
-//  Zombeacon (tm)
-//
-// Copyright (c) 2014, Punch Through Design, LLC
-// All rights reserved.
-//
-//Redistribution and use in source and binary forms, with or without
-//modification, are permitted provided that the following conditions are met:
-//1. Redistributions of source code must retain the above copyright
-//notice, this list of conditions and the following disclaimer.
-//2. Redistributions in binary form must reproduce the above copyright
-//notice, this list of conditions and the following disclaimer in the
-//documentation and/or other materials provided with the distribution.
-//3. Neither the name of the <organization> nor the
-//names of its contributors may be used to endorse or promote products
-//derived from this software without specific prior written permission.
-
-//THIS SOFTWARE IS PROVIDED BY PUNCH THROUGH DESIGN, LLC ''AS IS'' AND ANY
-//EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-//DISCLAIMED. IN NO EVENT SHALL PUNCH THROUGH DESIGN, LLC BE LIABLE FOR ANY
-//DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 
 #import "ViewController.h"
 #import <AVFoundation/AVFoundation.h>
@@ -39,29 +12,24 @@
 // Location Manager Associated Types and primitives
 @property (strong, nonatomic) CLLocationManager *locManager;
 @property (strong, nonatomic) CLBeaconRegion *beaconRegion;
-@property (strong, nonatomic) CLBeaconRegion *zomBeaconRegion;
-@property (strong, nonatomic) CLBeaconRegion *zomBeaconRegion2;
+@property (strong, nonatomic) CLBeaconRegion *FencebeaconRegion;
+@property (strong, nonatomic) CLBeaconRegion *FencebeaconRegion2;
 @property (assign, nonatomic) CLProximity lastProximity;
 @property (assign, nonatomic) int proxFilter;
 
 // Peripheral Manager Associated Types
 @property (strong, nonatomic) CBPeripheralManager *beaconManager;
 @property (strong, nonatomic) NSMutableDictionary *beaconAdvData;
-@property (strong, nonatomic) NSMutableDictionary *zomBeaconAdvData;
-@property (strong, nonatomic) NSMutableDictionary *zomBeaconAdvData2;
+@property (strong, nonatomic) NSMutableDictionary *FencebeaconAdvData;
+@property (strong, nonatomic) NSMutableDictionary *FencebeaconAdvData2;
 
-// AVFoundation Framework
-@property (strong, nonatomic) NSArray *zombieSounds;
-@property (strong, nonatomic) AVAudioPlayer *audioPlayer;
-@property (assign, nonatomic) int zombiePlayFilter;
-
-// Zombie images and gesture based state changes
+// fencer images and gesture based state changes
 @property (strong, nonatomic) UIImageView *greenImageBackground;
 @property (strong, nonatomic) UIImageView *redImageBackground;
-@property (strong, nonatomic) UIColor *zombieBgColor;
+@property (strong, nonatomic) UIColor *fencerBgColor;
 //@property (strong, nonatomic) UISwipeGestureRecognizer *rightRecognizer;
 @property (strong, nonatomic) UISwipeGestureRecognizer *leftRecognizer;
-@property (assign, nonatomic) bool isZombeacon;
+@property (assign, nonatomic) bool isFencebeacon;
 
 @end
 
@@ -71,8 +39,8 @@
 // Constants
 
 // Beacon configuration
-static const int kMajorUninfected = 0;
-static const int kMajorZombie = 1;
+static const int kMajorReset = 0;
+static const int kMajorfencer = 1;
 static const int kMinorGreen = 250;
 static const int kMinorRed = 23;
 //NSString *const kBeaconUuid = @"95C8A575-0354-4ADE-8C6C-33E72CD84E9F";
@@ -85,10 +53,10 @@ NSString *const kBeaconIdentifier2 = @"Fencer 2";
 
 // Filters and view opacity
 static const int kProxFilterCount = 1;
-static const int kZombieRssiAtOneMeter = -65;
-static const int kZombiePlayDelay = 5;
+static const int kfencerRssiAtOneMeter = -65;
+static const int kfencerPlayDelay = 5;
 static const float kLongestBeaconDistance = 4.0;
-static const float kLightestZombieAlpha = 0.05f;
+static const float kLightestfencerAlpha = 0.05f;
 
 static uint64_t globalGreen = 0;
 static uint64_t globalRed = 0;
@@ -101,15 +69,14 @@ static uint64_t globalRed = 0;
     
     // init primitives
     self.proxFilter = 0;
-    self.isZombeacon = NO;
-    self.zombiePlayFilter = 0;
+    self.isFencebeacon = NO;
     
     // Set up beacons
     
     // Used to calibrate proximity detection
-    NSNumber *zomRssiAtOneMeter = [[NSNumber alloc] initWithInt:kZombieRssiAtOneMeter];
+    NSNumber *fencerRssiAtOneMeter = [[NSNumber alloc] initWithInt:kfencerRssiAtOneMeter];
     
-    // This UUID is the unique identifier for all Zombeacons and Beacons that monitor for Zombeacons.
+    // This UUID is the unique identifier for all Fencebeacons and Beacons that monitor for Fencebeacons.
     NSUUID *proximityUUID = [[NSUUID alloc] initWithUUIDString:kBeaconUuid];
     NSUUID *proximityUUID2 = [[NSUUID alloc] initWithUUIDString:kBeaconUuid2];
     
@@ -128,62 +95,53 @@ static uint64_t globalRed = 0;
                                                                options:nil];
     self.beaconManager.delegate = self;
     
-    // These identify the beacon and Zombeacon regions used by CoreLocation
+    // These identify the beacon and Fencebeacon regions used by CoreLocation
     // Notice that the proximity UUID and identifier are the same for each,
-    // but that beacons and zombeacons have different major IDs.  We could
+    // but that beacons and Fencebeacons have different major IDs.  We could
     // have used minor IDs in place of major IDs as well.
     self.beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
-                                                                major:kMajorUninfected
+                                                                major:kMajorReset
                                                            identifier:kBeaconIdentifier];
     
-    self.zomBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
-                                                                   major:kMajorZombie
+    self.FencebeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID
+                                                                   major:kMajorfencer
                                                               identifier:kBeaconIdentifier];
 
     
-    self.zomBeaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
-                                                                    major:kMajorZombie
+    self.FencebeaconRegion2 = [[CLBeaconRegion alloc] initWithProximityUUID:proximityUUID2
+                                                                    major:kMajorfencer
                                                                identifier:kBeaconIdentifier2];
     
     // Advertising NSDictionary objects created from the regions we defined
     // We add a local name for each, but it isn't a necessary step
-    self.beaconAdvData = [self.beaconRegion peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
+    self.beaconAdvData = [self.beaconRegion peripheralDataWithMeasuredPower:fencerRssiAtOneMeter];
     [self.beaconAdvData  setObject:@"Healthy Beacon"
                             forKey:CBAdvertisementDataLocalNameKey];
     
-    self.zomBeaconAdvData = [self.zomBeaconRegion peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
-    [self.zomBeaconAdvData setObject:@"Zombeacon"
+    self.FencebeaconAdvData = [self.FencebeaconRegion peripheralDataWithMeasuredPower:fencerRssiAtOneMeter];
+    [self.FencebeaconAdvData setObject:@"Fencebeacon"
                               forKey:CBAdvertisementDataLocalNameKey];
     
-    self.zomBeaconAdvData2 = [self.zomBeaconRegion2 peripheralDataWithMeasuredPower:zomRssiAtOneMeter];
-    [self.zomBeaconAdvData2 setObject:@"Zombeacon"
+    self.FencebeaconAdvData2 = [self.FencebeaconRegion2 peripheralDataWithMeasuredPower:fencerRssiAtOneMeter];
+    [self.FencebeaconAdvData2 setObject:@"Fencebeacon"
                                forKey:CBAdvertisementDataLocalNameKey];
     
-    // Set up the zombie background picture
+    // Set up the background picture
     UIImage* greenPattern = [UIImage imageNamed:@"green_light.jpg"];
     UIImage* redPattern = [UIImage imageNamed:@"red_light.jpg"];
-    self.zombieBgColor = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.3];
+    self.fencerBgColor = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.3];
     self.greenImageBackground = [[UIImageView alloc] initWithImage:greenPattern];
     self.redImageBackground = [[UIImageView alloc] initWithImage:redPattern];
     self.greenImageBackground.frame = CGRectMake(0, 0, 160, 720);
     self.redImageBackground.frame = CGRectMake(160, 0, 160, 720);
     // Initialize the opacity as essentially transparent
-    self.greenImageBackground.alpha = kLightestZombieAlpha;
-    self.redImageBackground.alpha = kLightestZombieAlpha;
+    self.greenImageBackground.alpha = kLightestfencerAlpha;
+    self.redImageBackground.alpha = kLightestfencerAlpha;
     
     [self.view addSubview:self.greenImageBackground];
     [self.view sendSubviewToBack:self.greenImageBackground];
     [self.view addSubview:self.redImageBackground];
     [self.view sendSubviewToBack:self.redImageBackground];
-    
-    // set up gestures to turn on zombification.  Right for zombies, left for healthies
-    /* Right swipe
-     self.rightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-     action:@selector(rightSwipeHandle:)];
-     
-     self.rightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-     [self.rightRecognizer setNumberOfTouchesRequired:1];
-     */
     
     self.leftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                                                     action:@selector(leftSwipeHandle:)];
@@ -191,24 +149,23 @@ static uint64_t globalRed = 0;
     self.leftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.leftRecognizer setNumberOfTouchesRequired:1];
     
-    //[self.view addGestureRecognizer:self.rightRecognizer]; --Right Swipe Useless
     [self.view addGestureRecognizer:self.leftRecognizer];
     
-    // Start looking for zombies
-    [self startBeaconingUninfected];
+    // Start looking for fencers
+    [self startBeaconingReset];
 }
 
-// Sets device as a beacon or zombeacon
+// Sets device as a beacon or Fencebeacon
 -(void)resetScore
 {
     // Switch back to a healthy lifestyle
-    self.greenImageBackground.alpha = kLightestZombieAlpha;
+    self.greenImageBackground.alpha = kLightestfencerAlpha;
     self.greenImageBackground.backgroundColor = [UIColor clearColor];
-    self.redImageBackground.alpha = kLightestZombieAlpha;
+    self.redImageBackground.alpha = kLightestfencerAlpha;
     self.redImageBackground.backgroundColor = [UIColor clearColor];
     
-    self.isZombeacon = false;
-    [self startBeaconingUninfected];
+    self.isFencebeacon = false;
+    [self startBeaconingReset];
     
     // reset filter
     self.proxFilter = 0;
@@ -216,7 +173,7 @@ static uint64_t globalRed = 0;
 
 -(void)checkWithinTimeGreen:(NSNumber *)kMinor nearBeacon:(CLBeacon *)nearBeacon
 {
-    while ([self timeDifference:globalRed] < 100000000000)
+    while ([self timeDifference:globalRed] < 1000000000)
     {
         self.greenImageBackground.alpha = 1.0f;
         NSLog(@"TIME DIFFERENCE WORKS");
@@ -226,7 +183,7 @@ static uint64_t globalRed = 0;
 
 -(void)checkWithinTimeRed:(NSNumber *)kMinor nearBeacon:(CLBeacon *)nearBeacon
 {
-    while ([self timeDifference:globalGreen] < 100000000000)
+    while ([self timeDifference:globalGreen] < 1000000000)
     {
         self.redImageBackground.alpha = 1.0f;
         NSLog(@"TIME DIFFERENCE WORKS");
@@ -253,47 +210,22 @@ static uint64_t globalRed = 0;
 
 -(void)lockout
 {
-    self.greenImageBackground.backgroundColor = self.zombieBgColor;
-    self.redImageBackground.backgroundColor = self.zombieBgColor;
-    self.isZombeacon = true;
+    self.greenImageBackground.backgroundColor = self.fencerBgColor;
+    self.redImageBackground.backgroundColor = self.fencerBgColor;
+    self.isFencebeacon = true;
 }
 
-// Starts monitoring for infected beacons and advertises itself as a healthy beacon
--(void)startBeaconingUninfected
-{
-    // Advertise as a healthy beacon
-    //[self.beaconManager stopAdvertising];
+// Starts monitoring for Scored beacons and advertises itself as a healthy beacon
+-(void)startBeaconingReset
+{   
+    [self.locManager startMonitoringForRegion:self.FencebeaconRegion];
+    [self.locManager startRangingBeaconsInRegion:self.FencebeaconRegion];
     
-    //[self.locManager stopMonitoringForRegion:self.beaconRegion];
-    //[self.locManager stopRangingBeaconsInRegion:self.beaconRegion];
-    
-    [self.locManager startMonitoringForRegion:self.zomBeaconRegion];
-    [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion];
-    
-    [self.locManager startMonitoringForRegion:self.zomBeaconRegion2];
-    [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion2];
+    [self.locManager startMonitoringForRegion:self.FencebeaconRegion2];
+    [self.locManager startRangingBeaconsInRegion:self.FencebeaconRegion2];
     
     [self.beaconManager startAdvertising:self.beaconAdvData];
 }
-
-// Starts monitoring for uninfected beacons and advertises itself as a zombeacon
--(void)startBeaconingInfected
-{
-    //[self.beaconManager stopAdvertising];
-    
-    //Want to keep looking for beacons
-    //[self.locManager stopMonitoringForRegion:self.zomBeaconRegion];
-    //[self.locManager stopRangingBeaconsInRegion:self.zomBeaconRegion];
-    
-    [self.locManager startMonitoringForRegion:self.beaconRegion];
-    [self.locManager startRangingBeaconsInRegion:self.beaconRegion];
-    
-    [self.locManager startMonitoringForRegion:self.zomBeaconRegion2];
-    [self.locManager startRangingBeaconsInRegion:self.zomBeaconRegion2];
-    
-    [self.beaconManager startAdvertising:self.zomBeaconAdvData];
-}
-
 
 
 // For debug
@@ -324,7 +256,7 @@ static uint64_t globalRed = 0;
     // Debounce style filter - reset if proximity changes
     // This filter will ensure that a single reading of "Near" or "Immediate" doesn't
     // trigger a sound playback or beacon state switch immediately.  These are
-    // George A. Romero style Zombeacons.
+    // George A. Romero style Fencebeacons.
     if (nearestBeacon.proximity != self.lastProximity)
     {
         self.proxFilter = 0;
@@ -334,34 +266,17 @@ static uint64_t globalRed = 0;
         self.proxFilter++;
     }
     
-    // Beacon must be in a certain proximity for a set amount of time before triggering events
-//    if ( self.proxFilter >= kProxFilterCount )
-//    {
-//        // If you are a zombeacon, and you notice a healthy beacon that is at least near to you,
-//        // groan as your hunger for brains is all consuming
-//        if ( self.isZombeacon
-//            && ( CLProximityNear == nearestBeacon.proximity
-//                || CLProximityImmediate == nearestBeacon.proximity ) )
-//        {
-//            self.zombiePlayFilter++;
-//            
-//            if ( self.zombiePlayFilter >= kZombiePlayDelay )
-//            {
-//                // Make sound
-//                self.zombiePlayFilter = 0;
-//            }
-//        }
-//        // The healthy beacon is bit if the zombeacon is at an immediate distance
-//        else
-        if ( !self.isZombeacon && CLProximityFar == nearestBeacon.proximity )
+        // The healthy beacon is bit if the Fencebeacon is at an immediate distance
+        if ( !self.isFencebeacon && CLProximityFar == nearestBeacon.proximity )
         {
-            // Become a zombeacon!
+            // Become a Fencebeacon!
             //[self brainsAreTasty:YES];
 
             // Received green packet and both score sides are blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
+                globalGreen = mach_absolute_time();
             }
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == 1.0f)
             {
@@ -384,32 +299,24 @@ static uint64_t globalRed = 0;
                 [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
                 
             }
-            //Receives green packet and both are lit
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 1.0f)
-            {
-                //[self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
 
-                
-            }
             //Receives red packet and green is lit but red is blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 0.05f)
             {
                 [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
             //Receives red packet and both are lit
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 1.0f)
-            {
-                //[self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
-            }
+
         }
-        else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
+        else if ( !self.isFencebeacon && CLProximityImmediate == nearestBeacon.proximity )
         {
-            // Become a zombeacon!
+            // Become a Fencebeacon!
             //[self brainsAreTasty:YES];
             // Received green packet and both score sides are blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
+                globalGreen = mach_absolute_time();
             }
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == 1.0f)
             {
@@ -430,31 +337,22 @@ static uint64_t globalRed = 0;
             {
                 [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
-            //Receives green packet and both are lit
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 1.0f)
-            {
-                //[self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
-                
-            }
             //Receives red packet and green is lit but red is blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 0.05f)
             {
                 [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
-            //Receives red packet and both are lit
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 1.0f)
-            {
-                //[self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
-            }
+
         }
-        else if ( !self.isZombeacon && CLProximityNear == nearestBeacon.proximity )
+        else if ( !self.isFencebeacon && CLProximityNear == nearestBeacon.proximity )
         {
-            // Become a zombeaco
+            // Become a fencerbeaco
             //[self brainsAreTasty:YES];
             // Received green packet and both score sides are blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == .05f)
             {
                 self.greenImageBackground.alpha = 1.0f;
+                globalGreen = mach_absolute_time();
             }
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == .05f && self.greenImageBackground.alpha == 1.0f)
             {
@@ -476,29 +374,15 @@ static uint64_t globalRed = 0;
                 [self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
                 
             }
-            //Receives green packet and both are lit
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorGreen)] && self.redImageBackground.alpha == 1.0f && self.greenImageBackground.alpha == 1.0f)
-            {
-                //[self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
-            }
             //Receives red packet and green is lit but red is blank
             if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 0.05f)
             {
                 [self checkWithinTimeRed:[NSNumber numberWithInt:kMinorRed] nearBeacon:nearestBeacon];
             }
-            //Receives red packet and both are lit
-            if ([nearestBeacon.minor isEqualToNumber:@(kMinorRed)] && self.greenImageBackground.alpha == 1.0f && self.redImageBackground.alpha == 1.0f)
-            {
-                //[self checkWithinTimeGreen:[NSNumber numberWithInt:kMinorGreen] nearBeacon:nearestBeacon];
-            }
+
         }
         
     }
-        //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
-        
-    //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
-    //uint64_t start = mach_absolute_time();
-//}
 
 // Just for Debug
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
