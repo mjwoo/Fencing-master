@@ -211,7 +211,7 @@ static const float kLightestZombieAlpha = 0.05f;
 }
 
 //Converts mach absolute time into nanoseconds
--(int)timeDifference:(uint64_t)machTime
+-(unsigned long long)timeDifference:(uint64_t)machTime
 {
     /* Get the timebase info */
     mach_timebase_info_data_t info;
@@ -225,6 +225,13 @@ static const float kLightestZombieAlpha = 0.05f;
 
     // Return the converted time difference
     return duration;
+}
+
+-(void)lockout
+{
+    self.greenImageBackground.backgroundColor = self.zombieBgColor;
+    self.redImageBackground.backgroundColor = self.zombieBgColor;
+    self.isZombeacon = true;
 }
 
 // Starts monitoring for infected beacons and advertises itself as a healthy beacon
@@ -353,23 +360,45 @@ static const float kLightestZombieAlpha = 0.05f;
                 
                 uint64_t start = mach_absolute_time();
                 
-                while (timeDifference(start) < [NUMBER]) {
-                    <#statements#>
+                unsigned long long timing = [self timeDifference:start];
+                
+                NSLog(@"testing function: %lld", timing);
+                
+                
+
+                while ([self timeDifference:start] < 1000000000)
+                {
+                    if ([nearestBeacon.minor isEqualToNumber:@23])
+                    {
+                        self.redImageBackground.alpha = 1.0f;
+                        [self lockout];
+                    }
+//                    NSLog(@"TIME DIFFERENCE WORKS");
+
                 }
+                [self lockout];
                 
             }
             if ([nearestBeacon.minor isEqualToNumber:@23])
             {
-                CFTimeInterval startTime = CACurrentMediaTime();
                 self.redImageBackground.alpha = 1.0f;
                 
-                CFTimeInterval now = CACurrentMediaTime();
-                CFTimeInterval elapsed = now - startTime;
-                //NSLog(@"Start time: %f", elapsed);
-                
                 uint64_t start = mach_absolute_time();
-                NSLog(@"Start: %qu", start);
+                unsigned long long timing = [self timeDifference:start];
                 
+                NSLog(@"testing function: %lld", timing);
+                
+                while ([self timeDifference:start] < 1000000000)
+                {
+                    if ([nearestBeacon.minor isEqualToNumber:@250])
+                    {
+                        self.greenImageBackground.alpha = 1.0f;
+                        [self lockout];
+                    }
+                    NSLog(@"TIME DIFFERENCE WORKS");
+
+                }
+                [self lockout];
             }
         }
         else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
@@ -381,18 +410,41 @@ static const float kLightestZombieAlpha = 0.05f;
                 self.greenImageBackground.alpha = 1.0f;
                 
                 uint64_t start = mach_absolute_time();
+                unsigned long long timing = [self timeDifference:start];
+                
+                NSLog(@"testing function: %lld", timing);
+                
+                while ([self timeDifference:start] < 1000000000)
+                {
+                    if ([nearestBeacon.minor isEqualToNumber:@23])
+                    {
+                        self.redImageBackground.alpha = 1.0f;
+                        [self lockout];
+                    }
+                    NSLog(@"TIME DIFFERENCE WORKS");
 
+                }
+                [self lockout];
             }
             if ([nearestBeacon.minor isEqualToNumber:@23])
             {
-                CFTimeInterval startTime = CACurrentMediaTime();
                 self.redImageBackground.alpha = 1.0f;
                 
-                CFTimeInterval now = CACurrentMediaTime();
-                CFTimeInterval elapsed = now - startTime;
-                
                 uint64_t start = mach_absolute_time();
-                NSLog(@"Start: %qu", start);
+                unsigned long long timing = [self timeDifference:start];
+                
+                NSLog(@"testing function: %lld", timing);
+                
+                while ([self timeDifference:start] < 1000000000)
+                {
+                    if ([nearestBeacon.minor isEqualToNumber:@250])
+                    {
+                        self.greenImageBackground.alpha = 1.0f;
+                        [self lockout];
+                    }
+                    NSLog(@"TIME DIFFERENCE WORKS");
+                }
+                [self lockout];
                 
             }
         }
@@ -404,37 +456,42 @@ static const float kLightestZombieAlpha = 0.05f;
             {
                 self.greenImageBackground.alpha = 1.0f;
                 
-                /* Get the timebase info */
-                mach_timebase_info_data_t info;
-                mach_timebase_info(&info);
-                
                 uint64_t start = mach_absolute_time();
+
+                unsigned long long timing = [self timeDifference:start];
                 
-                /* Do some code */
+                NSLog(@"testing function: %lld", timing);
                 
-                uint64_t duration = mach_absolute_time() - start;
-                
-                /* Convert to nanoseconds */
-                duration *= info.numer;
-                duration /= info.denom;
-                
-                /* Log the time */
-                NSLog(@"My amazing code took %lld nanoseconds!", duration);
-                
-                /*
-                 if (elapsed < 5)
-                 {
-                 NSLog(@"Hello World");
-                 self.redImageBackground.alpha = 1.0f;
-                 }
-                 */
+                while ([self timeDifference:start] < 1000000000)
+                {
+                    if ([nearestBeacon.minor isEqualToNumber:@23])
+                    {
+                        self.redImageBackground.alpha = 1.0f;
+                        [self lockout];
+                    }
+                    NSLog(@"TIME DIFFERENCE WORKS");
+                }
+                [self lockout];
             }
             if ([nearestBeacon.minor isEqualToNumber:@23])
             {
                 self.redImageBackground.alpha = 1.0f;
                 
                 uint64_t start = mach_absolute_time();
-                NSLog(@"Start: %qu", start);
+                unsigned long long timing = [self timeDifference:start];
+                
+                NSLog(@"testing function: %lld", timing);
+                
+                while ([self timeDifference:start] < 1000000000)
+                {
+                    if ([nearestBeacon.minor isEqualToNumber:@250])
+                    {
+                        self.greenImageBackground.alpha = 1.0f;
+                        [self lockout];
+                    }
+                    NSLog(@"TIME DIFFERENCE WORKS");
+                }
+                [self lockout];
             }
         }
         
@@ -442,8 +499,7 @@ static const float kLightestZombieAlpha = 0.05f;
         //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
         
     //NSLog(@"Found Beacons: %lu", (unsigned long)[beacons count]);
-    uint64_t start = mach_absolute_time();
-    NSLog(@"Start: %qu", start);
+    //uint64_t start = mach_absolute_time();
 }
 
 // Just for Debug
