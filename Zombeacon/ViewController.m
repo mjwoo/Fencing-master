@@ -73,6 +73,8 @@
 // Beacon configuration
 static const int kMajorUninfected = 0;
 static const int kMajorZombie = 1;
+static const int kMinorGreen = 250;
+static const int kMinorRed = 23;
 //NSString *const kBeaconUuid = @"95C8A575-0354-4ADE-8C6C-33E72CD84E9F";
 NSString *const kBeaconUuid = @"A495FF10-C5B1-4B44-B512-1370F02D74DE";
 NSString *const kBeaconIdentifier = @"Fencer 1";
@@ -208,6 +210,26 @@ static const float kLightestZombieAlpha = 0.05f;
     
     // reset filter
     self.proxFilter = 0;
+}
+
+-(void)checkWithinTime:(int)kMinorType
+{
+    uint64_t start = mach_absolute_time();
+    
+    unsigned long long timing = [self timeDifference:start];
+    
+    NSLog(@"testing function: %lld", timing);
+
+    while ([self timeDifference:start] < 1000000000)
+    {
+        if ([nearestBeacon.minor isEqualToNumber:@kMinorType])
+        {
+            self.greenImageBackground.alpha = 1.0f;
+            [self lockout];
+        }
+        NSLog(@"TIME DIFFERENCE WORKS");
+    }
+    [self lockout];
 }
 
 //Converts mach absolute time into nanoseconds
@@ -353,98 +375,31 @@ static const float kLightestZombieAlpha = 0.05f;
         {
             // Become a zombeacon!
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@250])
+            if ([nearestBeacon.minor isEqualToNumber:@kMinorGreen])
             {
-                
                 self.greenImageBackground.alpha = 1.0f;
-                
-                uint64_t start = mach_absolute_time();
-                
-                unsigned long long timing = [self timeDifference:start];
-                
-                NSLog(@"testing function: %lld", timing);
-                
-                
-
-                while ([self timeDifference:start] < 1000000000)
-                {
-                    if ([nearestBeacon.minor isEqualToNumber:@23])
-                    {
-                        self.redImageBackground.alpha = 1.0f;
-                        [self lockout];
-                    }
-//                    NSLog(@"TIME DIFFERENCE WORKS");
-
-                }
-                [self lockout];
+                [self checkWithinTime:kMinorRed];                
                 
             }
-            if ([nearestBeacon.minor isEqualToNumber:@23])
+            if ([nearestBeacon.minor isEqualToNumber:@kMinorRed])
             {
                 self.redImageBackground.alpha = 1.0f;
-                
-                uint64_t start = mach_absolute_time();
-                unsigned long long timing = [self timeDifference:start];
-                
-                NSLog(@"testing function: %lld", timing);
-                
-                while ([self timeDifference:start] < 1000000000)
-                {
-                    if ([nearestBeacon.minor isEqualToNumber:@250])
-                    {
-                        self.greenImageBackground.alpha = 1.0f;
-                        [self lockout];
-                    }
-                    NSLog(@"TIME DIFFERENCE WORKS");
-
-                }
-                [self lockout];
+                [self checkWithinTime:kMinorGreen];
             }
         }
         else if ( !self.isZombeacon && CLProximityImmediate == nearestBeacon.proximity )
         {
             // Become a zombeacon!
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@250])
+            if ([nearestBeacon.minor isEqualToNumber:@kMinorGreen])
             {
-                self.greenImageBackground.alpha = 1.0f;
-                
-                uint64_t start = mach_absolute_time();
-                unsigned long long timing = [self timeDifference:start];
-                
-                NSLog(@"testing function: %lld", timing);
-                
-                while ([self timeDifference:start] < 1000000000)
-                {
-                    if ([nearestBeacon.minor isEqualToNumber:@23])
-                    {
-                        self.redImageBackground.alpha = 1.0f;
-                        [self lockout];
-                    }
-                    NSLog(@"TIME DIFFERENCE WORKS");
-
-                }
-                [self lockout];
+                self.greenImageBackground.alpha = 1.0f;                
+                [self checkWithinTime:kMinorRed];
             }
-            if ([nearestBeacon.minor isEqualToNumber:@23])
+            if ([nearestBeacon.minor isEqualToNumber:@kMinorRed])
             {
                 self.redImageBackground.alpha = 1.0f;
-                
-                uint64_t start = mach_absolute_time();
-                unsigned long long timing = [self timeDifference:start];
-                
-                NSLog(@"testing function: %lld", timing);
-                
-                while ([self timeDifference:start] < 1000000000)
-                {
-                    if ([nearestBeacon.minor isEqualToNumber:@250])
-                    {
-                        self.greenImageBackground.alpha = 1.0f;
-                        [self lockout];
-                    }
-                    NSLog(@"TIME DIFFERENCE WORKS");
-                }
-                [self lockout];
+                [self checkWithinTime:kMinorGreen];
                 
             }
         }
@@ -452,46 +407,17 @@ static const float kLightestZombieAlpha = 0.05f;
         {
             // Become a zombeaco
             //[self brainsAreTasty:YES];
-            if ([nearestBeacon.minor isEqualToNumber:@250])
+            if ([nearestBeacon.minor isEqualToNumber:@kMinorGreen])
             {
                 self.greenImageBackground.alpha = 1.0f;
-                
-                uint64_t start = mach_absolute_time();
+                [self checkWithinTime:kMinorRed];
 
-                unsigned long long timing = [self timeDifference:start];
-                
-                NSLog(@"testing function: %lld", timing);
-                
-                while ([self timeDifference:start] < 1000000000)
-                {
-                    if ([nearestBeacon.minor isEqualToNumber:@23])
-                    {
-                        self.redImageBackground.alpha = 1.0f;
-                        [self lockout];
-                    }
-                    NSLog(@"TIME DIFFERENCE WORKS");
-                }
-                [self lockout];
             }
-            if ([nearestBeacon.minor isEqualToNumber:@23])
+            if ([nearestBeacon.minor isEqualToNumber:@kMinorRed])
             {
                 self.redImageBackground.alpha = 1.0f;
-                
-                uint64_t start = mach_absolute_time();
-                unsigned long long timing = [self timeDifference:start];
-                
-                NSLog(@"testing function: %lld", timing);
-                
-                while ([self timeDifference:start] < 1000000000)
-                {
-                    if ([nearestBeacon.minor isEqualToNumber:@250])
-                    {
-                        self.greenImageBackground.alpha = 1.0f;
-                        [self lockout];
-                    }
-                    NSLog(@"TIME DIFFERENCE WORKS");
-                }
-                [self lockout];
+                [self checkWithinTime:kMinorGreen];
+
             }
         }
         
@@ -527,18 +453,6 @@ static const float kLightestZombieAlpha = 0.05f;
 - (void)leftSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     [self resetScore];
-}
-
-// Randomized playback using AVFoundation Framework
--(void)playRandomZombieSound
-{
-    uint16_t randSoundIdx = random() % [self.zombieSounds count];
-    NSError *error = nil;
-    
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:self.zombieSounds[randSoundIdx]
-                                                              error:&error];
-    [self.audioPlayer prepareToPlay];
-    [self.audioPlayer play];
 }
 
 - (void)didReceiveMemoryWarning
